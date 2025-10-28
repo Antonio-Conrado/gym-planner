@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =======================
+// ENUMS
+// =======================
+
+enum Role {
+  CLIENT // gym client
+  TRAINER // gym trainer
+  ADMIN // gym admin or owner
+}
+
+enum DaysOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum StatusList {
+  PENDING // pending confirmation
+  CONFIRMED // confirmed by the trainer
+  CANCELLED // cancelled by the trainer or gym/admin
+  MISSED // client did not attend
+  COMPLETED // session completed successfully
+  RESCHEDULED // session rescheduled
+}
+
+enum Concept {
+  DAY // daily pass
+  WEEK // weekly pass
+  MONTH // monthly membership
+  FORTNIGHT // biweekly membership
+  QUARTER // quarterly membership
+  SEMESTER // 6 months membership
+  YEAR // annual membership
+  OTHER // extra payment (plan personal, event, etc.)
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+}
+
+// =======================
+// CATEGORIES AND SPECIALITIES
+// =======================
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String //crossfit, weight
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Speciality {
+  id        Int      @id @default(autoincrement())
+  name      String
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  trainers Trainer[]
+}
+
+// =======================
+// TRAINERS
+// =======================
+
+model Trainer {
+  id           Int        @id @default(autoincrement())
+  name         String?
+  email        String     @unique
+  googleId     String?    @unique
+  password     String?
+  telephone    String?
+  biography    String
+  photo        String?
+  role         Role       @default(TRAINER)
+  specialityId Int
+  speciality   Speciality @relation(fields: [specialityId], references: [id])
+  status       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  deletedAt    DateTime?
+
+  schedules     Schedule[]
+  reservations  Reservation[]
+  TrainerReview TrainerReview[]
+}
+
+// Optional: reviews of trainers by clients
+model TrainerReview {
+  id        Int      @id @default(autoincrement())
+  trainerId Int
+  trainer   Trainer  @relation(fields: [trainerId], references: [id])
+  clientId  Int
+  client    User     @relation(fields: [clientId], references: [id])
+  rating    Int // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+// =======================
+// CLIENTS
+// =======================
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String?
+  email     String?   @unique
+  googleId  String?   @unique
+  telephone String?
+  password  String?
+  role      Role      @default(CLIENT)
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  reservations  Reservation[]
+  progress      UserProgress[]
+  payments      Payment[]
+  TrainerReview TrainerReview[]
+}
+
+// =======================
+// SCHEDULES
+// =======================
+
+model Schedule {
+  id        Int        @id @default(autoincrement())
+  trainerId Int
+  trainer   Trainer    @relation(fields: [trainerId], references: [id])
+  dayOfWeek DaysOfWeek
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+
+  reservations Reservation[]
+}
+
+// =======================
+// RESERVATIONS
+// =======================
+
+model Reservation {
+  id         Int      @id @default(autoincrement())
+  clientId   Int
+  client     User     @relation(fields: [clientId], references: [id])
+  trainerId  Int
+  trainer    Trainer  @relation(fields: [trainerId], references: [id])
+  scheduleId Int
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+
+  status     StatusList @default(PENDING)
+  notes      String?
+  reservedAt DateTime   @default(now())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
+
+  history ReservationHistory[]
+
+  @@index([clientId, trainerId, scheduleId])
+}
+
+model ReservationHistory {
+  id            Int         @id @default(autoincrement())
+  reservationId Int
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+
+  oldStatus     StatusList
+  newStatus     StatusList
+  notes         String?
+  changedByRole Role
+  changedAt     DateTime   @default(now())
+}
+
+// =======================
+// USER PROGRESS AND ROUTINES
+// =======================
+
+model UserProgress {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  weight Decimal  @db.Decimal(5, 2)
+  height Decimal? @db.Decimal(5, 2)
+  chest  Decimal? @db.Decimal(5, 2)
+  waist  Decimal? @db.Decimal(5, 2)
+  hips   Decimal? @db.Decimal(5, 2)
+  biceps Decimal? @db.Decimal(5, 2)
+  legs   Decimal? @db.Decimal(5, 2)
+  calf   Decimal? @db.Decimal(5, 2)
+
+  notes      String?
+  recordedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  photos   ProgressPhoto[]
+  routines Routine[]
+
+  @@index([userId, recordedAt])
+}
+
+model Routine {
+  id             Int          @id @default(autoincrement())
+  userProgressId Int
+  userProgress   UserProgress @relation(fields: [userProgressId], references: [id])
+  name           String
+  description    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
+}
+
+model ProgressPhoto {
+  id             Int          @id @default(autoincrement())
+  userProgressId Int
+  userProgress   UserProgress @relation(fields: [userProgressId], references: [id])
+  url            String?
+  createdAt      DateTime     @default(now())
+}
+
+// =======================
+// PAYMENTS
+// =======================
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  amount    Decimal       @db.Decimal(10, 2)
+  method    PaymentMethod
+  concept   Concept
+  paidAt    DateTime      @default(now())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now()) @updatedAt
+}
