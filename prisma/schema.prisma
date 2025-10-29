@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -75,19 +76,39 @@ model Speciality {
 }
 
 // =======================
+// CLIENTS
+// =======================
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String?
+  email     String?   @unique
+  googleId  String?   @unique
+  telephone String?
+  password  String?
+  photo     String?
+  role      Role      @default(CLIENT)
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  reservations  Reservation[]
+  progress      UserProgress[]
+  payments      Payment[]
+  TrainerReview TrainerReview[]
+  Trainer       Trainer[]
+}
+
+// =======================
 // TRAINERS
 // =======================
 
 model Trainer {
   id           Int        @id @default(autoincrement())
-  name         String?
-  email        String     @unique
-  googleId     String?    @unique
-  password     String?
-  telephone    String?
   biography    String
-  photo        String?
-  role         Role       @default(TRAINER)
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
   specialityId Int
   speciality   Speciality @relation(fields: [specialityId], references: [id])
   status       Boolean    @default(true)
@@ -110,29 +131,6 @@ model TrainerReview {
   rating    Int // 1-5
   comment   String?
   createdAt DateTime @default(now())
-}
-
-// =======================
-// CLIENTS
-// =======================
-
-model User {
-  id        Int       @id @default(autoincrement())
-  name      String?
-  email     String?   @unique
-  googleId  String?   @unique
-  telephone String?
-  password  String?
-  role      Role      @default(CLIENT)
-  status    Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  deletedAt DateTime?
-
-  reservations  Reservation[]
-  progress      UserProgress[]
-  payments      Payment[]
-  TrainerReview TrainerReview[]
 }
 
 // =======================
