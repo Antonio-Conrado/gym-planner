@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Nav } from "@/shared/components/nav/Nav";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,19 +22,22 @@ export const metadata: Metadata = {
     "Sistema de gimnasio que permite gestionar clientes, entrenadores, horarios, pagos y progreso físico desde un solo lugar.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-
-        <Toaster position="top-right" />
+        <SessionProvider session={session}>
+          <Nav session={session} />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
