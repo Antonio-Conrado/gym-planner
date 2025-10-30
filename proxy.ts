@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const protectedRoutes = ["/dashboard", "/profile"];
-const publicRoutes = ["/login", "/register", "/"];
+const publicRoutes = ["/login", "/register"];
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -21,7 +21,7 @@ export default async function proxy(req: NextRequest) {
 
   // If the route is public and there is a token → redirect to profile
   if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL("/profile", req.nextUrl));
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
   // If everything is okay, continue to the requested page
