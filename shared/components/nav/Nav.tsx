@@ -17,11 +17,12 @@ export function Nav({ session }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const navLinks = [
-    { name: "Inicio", href: "#home" },
-    { name: "Instalaciones", href: "#facilities" },
-    { name: "Planes", href: "#plans" },
-    { name: "Testimonios", href: "#testimonials" },
-    { name: "Contacto / Ubicación", href: "#contact" },
+    { name: "Inicio", href: "/#home" },
+    { name: "Beneficios", href: "/#benefits" },
+    { name: "Instalaciones", href: "/#facilities" },
+    { name: "Planes", href: "/#plans" },
+    { name: "Testimonios", href: "/#testimonials" },
+    { name: "Contacto / Ubicación", href: "/#contact" },
   ];
 
   return (
@@ -40,14 +41,14 @@ export function Nav({ session }: Props) {
           {!isMobile && (
             <div className="flex items-center gap-1">
               {navLinks.map((link) => (
-                <Button
-                  key={link.name}
-                  className="hover:bg-gray-100 hover:text-orange-500"
-                  variant="ghost"
-                  onClick={() => alert(`Ir a ${link.name}`)}
-                >
-                  {link.name}
-                </Button>
+                <Link key={link.name} href={link.href}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start hover:bg-gray-100 hover:text-orange-500"
+                  >
+                    {link.name}
+                  </Button>
+                </Link>
               ))}
             </div>
           )}
@@ -85,17 +86,14 @@ export function Nav({ session }: Props) {
         <div className="border-t border-gray-200 bg-white">
           <div className="px-4 py-3 space-y-2">
             {navLinks.map((link) => (
-              <Button
-                key={link.name}
-                variant="ghost"
-                className="w-full justify-start hover:bg-gray-100 hover:text-orange-500"
-                onClick={() => {
-                  alert(`Ir a ${link.name}`);
-                  setMobileMenuOpen(false);
-                }}
-              >
-                {link.name}
-              </Button>
+              <Link key={link.name} href={link.href}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start hover:bg-gray-100 hover:text-orange-500"
+                >
+                  {link.name}
+                </Button>
+              </Link>
             ))}
 
             {!session?.user ? (

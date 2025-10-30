@@ -76,10 +76,19 @@ export default function UserAvatar({ session, isMobile }: UserAvatarProps) {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Link href={"/profile"}>Mi Perfil</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+          <Link href={"/profile"}>
+            <DropdownMenuItem
+              className="
+          hover:cursor-pointer"
+            >
+              Mi Perfil
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="
+          hover:cursor-pointer"
+          >
             Cerrar Sesión
           </DropdownMenuItem>
         </DropdownMenuContent>
