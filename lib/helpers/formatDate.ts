@@ -1,0 +1,33 @@
+export function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
+export function getYear(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+export function getMonth(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    month: "short",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+export function getDay(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "short",
+    timeZone: "UTC",
+  }).format(date);
+}
