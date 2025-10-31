@@ -37,6 +37,12 @@ export default function ChangePasswordForm({ userId, hasPassword }: Props) {
     reset,
   } = useForm<changePassword>({
     resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      currentPassword: "",
+      password: "",
+      confirmPassword: "",
+      hasPassword,
+    },
   });
 
   const onSubmit = (data: changePassword) => {

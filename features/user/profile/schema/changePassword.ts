@@ -2,14 +2,7 @@ import * as z from "zod";
 
 export const changePasswordSchema = z
   .object({
-    currentPassword: z
-      .string()
-
-      .optional()
-      .refine((val) => val === "", {
-        error: "La contraseña actual es obligatoria",
-      })
-      .nullable(),
+    currentPassword: z.string().optional().nullable(),
     password: z
       .string()
       .nonempty({ message: "La nueva contraseña es obligatoria" })
@@ -20,7 +13,20 @@ export const changePasswordSchema = z
     confirmPassword: z
       .string()
       .nonempty({ message: "Debes confirmar la contraseña" }),
+    hasPassword: z.boolean(), //flag indicating if the user has a password
   })
+  .refine(
+    (data) => {
+      if (data.hasPassword) {
+        return !!data.currentPassword; // if the user has a password, currentPassword is required
+      }
+      return true; // if the user signed up with Google (no password), currentPassword is not required
+    },
+    {
+      path: ["currentPassword"],
+      message: "La contraseña actual es obligatoria",
+    }
+  )
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
     path: ["confirmPassword"],

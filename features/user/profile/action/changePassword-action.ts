@@ -15,10 +15,14 @@ export async function changePasswordAction(
   initialState: InitialState<changePasswordErrors>,
   formData: FormData
 ): Promise<InitialState<changePasswordErrors>> {
+  const hasPasswordValue = formData.get("hasPassword");
+  const hasPassword = hasPasswordValue === "true";
+
   const validateFields = changePasswordSchema.safeParse({
     currentPassword: formData.get("currentPassword"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
+    hasPassword,
   });
 
   if (!validateFields.success) {
@@ -36,7 +40,6 @@ export async function changePasswordAction(
 
   try {
     const { currentPassword, password } = validateFields.data;
-
     const user = await prisma.user.findUnique({ where: { id } });
     if (!user) throw new Error("No se pudo encontrar al usuario");
 
