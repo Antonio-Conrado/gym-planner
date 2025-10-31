@@ -81,8 +81,8 @@ model Speciality {
 
 model User {
   id        Int       @id @default(autoincrement())
-  name      String?
-  email     String?   @unique
+  name      String
+  email     String    @unique
   googleId  String?   @unique
   telephone String?
   password  String?
