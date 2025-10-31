@@ -16,6 +16,15 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
+import { Role, Speciality, Trainer } from "@/app/generated/prisma";
+import TrainerForm from "@/features/user/profile/component/TrainerForm";
+
+export async function getTrainer(userId: number) {
+  return await prisma.trainer.findFirst({
+    where: { userId },
+    include: { speciality: true },
+  });
+}
 
 export default async function Page() {
   const userAuth = await auth();
@@ -26,6 +35,14 @@ export default async function Page() {
   });
 
   if (!user) return redirect("/");
+
+  // If the user is a trainer, retrieve their data along with the speciality
+  let trainerData: Trainer | null = null;
+  let speciality: Speciality[] | null = null;
+  if (user.role === Role.TRAINER) {
+    trainerData = await getTrainer(user.id);
+    speciality = await prisma.speciality.findMany();
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 ">
@@ -97,6 +114,20 @@ export default async function Page() {
       </div>
 
       {/* information aditional when is trainer */}
+      {user.role === Role.TRAINER && trainerData && speciality && (
+        <div className="lg:col-span-3 mt-8">
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="text-lg font-medium">
+                Información del entrenador
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <TrainerForm trainer={trainerData} speciality={speciality} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
