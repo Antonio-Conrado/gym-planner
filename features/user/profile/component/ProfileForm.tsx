@@ -116,7 +116,7 @@ export default function ProfileForm({ user }: Props) {
             />
           </div>
         </div>
-        <Button className="mt-4 w-40" disabled={pending}>
+        <Button type="submit" className="mt-4 w-40" disabled={pending}>
           Guardar Cambios
         </Button>{" "}
       </form>

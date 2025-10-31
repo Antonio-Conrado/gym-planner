@@ -110,7 +110,7 @@ export default function ChangePasswordForm({ userId, hasPassword }: Props) {
             />
           </div>
         </div>
-        <Button className="mt-4 w-40" disabled={pending}>
+        <Button type="submit" className="mt-4 w-40" disabled={pending}>
           {hasPassword ? "Cambiar contraseña" : "Establecer contraseña"}
         </Button>
       </form>
