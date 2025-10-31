@@ -30,13 +30,14 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
           <Nav session={session} />
           {children}
+          <Toaster position="top-right" />
         </SessionProvider>
       </body>
     </html>
