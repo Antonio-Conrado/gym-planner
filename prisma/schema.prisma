@@ -82,7 +82,7 @@ model Speciality {
 model User {
   id        Int       @id @default(autoincrement())
   name      String
-  slug      String
+  slug      String    @unique
   email     String    @unique
   googleId  String?   @unique
   telephone String?
@@ -98,7 +98,9 @@ model User {
   progress      UserProgress[]
   payments      Payment[]
   TrainerReview TrainerReview[]
-  Trainer       Trainer[]
+  Trainer       Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
+
+  @@index([email, slug, id])
 }
 
 // =======================
@@ -110,7 +112,7 @@ model Trainer {
   biography    String
   rating       Decimal    @default(0)
   votesCount   Int        @default(0)
-  userId       Int
+  userId       Int        @unique
   user         User       @relation(fields: [userId], references: [id])
   specialityId Int
   speciality   Speciality @relation(fields: [specialityId], references: [id])
