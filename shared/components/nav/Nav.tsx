@@ -1,11 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/shared/components/ui/button";
+import Link from "next/link";
 import { Dumbbell, Menu, X } from "lucide-react";
 import UserAvatar from "./userAvatar";
-import Link from "next/link";
+import { Button } from "@/shared/components/ui/button";
 import { Session } from "next-auth";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from "@/shared/components/ui/navigation-menu";
 
 type Props = {
   session: Session | null;
@@ -14,13 +22,29 @@ type Props = {
 export function Nav({ session }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const navLinks = [
-    { name: "Inicio", href: "/#home" },
-    { name: "Beneficios", href: "/#benefits" },
-    { name: "Instalaciones", href: "/#facilities" },
-    { name: "Planes", href: "/#plans" },
-    { name: "Testimonios", href: "/#testimonials" },
-    { name: "Contacto / Ubicación", href: "/#contact" },
+  const navGroups = [
+    {
+      title: "General",
+      links: [
+        { name: "Inicio", href: "/#home" },
+        { name: "Beneficios", href: "/#benefits" },
+        { name: "Instalaciones", href: "/#facilities" },
+      ],
+    },
+    {
+      title: "Servicios",
+      links: [
+        { name: "Planes", href: "/#plans" },
+        { name: "Entrenadores", href: "/trainers" },
+      ],
+    },
+    {
+      title: "Otros",
+      links: [
+        { name: "Testimonios", href: "/#testimonials" },
+        { name: "Contacto / Ubicación", href: "/#contact" },
+      ],
+    },
   ];
 
   return (
@@ -32,22 +56,39 @@ export function Nav({ session }: Props) {
             <div className="bg-linear-to-r from-orange-500 to-red-500 p-2 rounded-lg">
               <Dumbbell className="w-6 h-6 text-white" />
             </div>
-            <span className="font-semibold text-gray-900 text-lg">
+            <Link href={"/"} className="font-semibold text-gray-900 text-lg">
               Gym Planner
-            </span>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.href}>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start hover:bg-gray-100 hover:text-orange-500"
-                >
-                  {link.name}
-                </Button>
-              </Link>
+          <div className="hidden md:flex items-center justify-between w-1/4 gap-4 ">
+            {navGroups.map((group) => (
+              <NavigationMenu key={group.title}>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="px-2 py-1 text-black">
+                      {group.title}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-2 ">
+                        {group.links.map((link) => (
+                          <li key={link.name}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={link.href}
+                                className="flex w-full p-2 rounded-md hover:bg-gray-200 transition hover:text-gray-800"
+                              >
+                                {link.name}
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             ))}
           </div>
 
@@ -82,22 +123,27 @@ export function Nav({ session }: Props) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white">
+        <div className="md:hidden fixed w-full border-t border-gray-200 bg-white  shadow-2xl z-50">
           <div className="px-4 py-3 space-y-2">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.href}>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start hover:bg-gray-100 hover:text-orange-500"
-                >
-                  {link.name}
-                </Button>
-              </Link>
+            {navGroups.map((group) => (
+              <div key={group.title}>
+                <p className="font-medium text-gray-600 mb-1">{group.title}</p>
+                {group.links.map((link) => (
+                  <Link key={link.name} href={link.href}>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start hover:bg-gray-100 hover:text-gray-800 "
+                    >
+                      {link.name}
+                    </Button>
+                  </Link>
+                ))}
+              </div>
             ))}
 
             {!session?.user ? (
               <Link href="/login">
-                <Button className="w-full">Iniciar sesión</Button>
+                <Button className="w-full mt-2">Iniciar sesión</Button>
               </Link>
             ) : (
               <UserAvatar session={session} isMobile={true} />

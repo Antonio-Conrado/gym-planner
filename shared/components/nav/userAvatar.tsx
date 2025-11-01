@@ -47,7 +47,7 @@ export default function UserAvatar({ session, isMobile }: UserAvatarProps) {
         </Button>
         <Button
           variant="ghost"
-          className="w-full justify-start text-red-600 hover:text-red-700"
+          className="w-full flex justify-start"
           onClick={() => signOut({ callbackUrl: "/" })}
         >
           Cerrar Sesión
