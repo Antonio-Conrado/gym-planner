@@ -8,6 +8,7 @@ import {
 } from "../schema/profile";
 import z from "zod";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function profileAction(
   initialState: InitialState<profileErrors>,
@@ -37,8 +38,10 @@ export async function profileAction(
 
     await prisma.user.update({
       where: { email },
-      data: { name, email, telephone: telephone ?? "" },
+      data: { name, telephone: telephone ?? "" },
     });
+
+    revalidatePath("/profile");
 
     return {
       message: "Perfil actualizado correctamente",

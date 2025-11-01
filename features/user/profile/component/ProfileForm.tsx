@@ -96,6 +96,7 @@ export default function ProfileForm({ user }: Props) {
               label="Correo electrónico"
               placeholder=""
               name="email"
+              readonly={true}
             />
           </div>
           <div className="grid gap-2">
