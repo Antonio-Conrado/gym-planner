@@ -9,6 +9,7 @@ import {
   registerInitialState,
   registerSchema,
 } from "../schemas/register";
+import { slugify } from "@/lib/helpers/slugify";
 
 export async function registerAction(
   initialState: InitialState<registerErrors>,
@@ -37,8 +38,19 @@ export async function registerAction(
     const { name, email, password } = validateFields.data;
     const hashPassword = bcrypt.hashSync(password, 12);
 
-    await prisma.user.create({
-      data: { name, email, password: hashPassword },
+    await prisma.$transaction(async (prisma) => {
+      const slugTemporary = `${slugify(name)}-${Date.now()}`;
+      const newUser = await prisma.user.create({
+        data: { name, slug: slugTemporary, email, password: hashPassword },
+      });
+
+      // Create final slug using user ID and name for unique, SEO-friendly URL
+      const slug = `${newUser.id}-${slugify(name)}`;
+
+      return prisma.user.update({
+        where: { id: newUser.id },
+        data: { slug },
+      });
     });
 
     return {
