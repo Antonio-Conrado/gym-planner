@@ -83,6 +83,8 @@ async function main() {
     data: {
       userId: trainerUser1.id,
       specialityId: crossfit.id,
+      rating: 4,
+      votesCount: 4,
       biography:
         "Entrenador con más de 8 años de experiencia en fuerza, acondicionamiento físico y CrossFit. Especializado en programas personalizados para clientes de todos los niveles.",
       status: true,
@@ -114,6 +116,8 @@ async function main() {
       specialityId: strength.id,
       biography:
         "Entrenadora enfocada en fuerza y resistencia, con programas diseñados para mejorar la musculatura y la condición física general.",
+      rating: 5,
+      votesCount: 5,
       status: true,
       schedules: {
         create: [

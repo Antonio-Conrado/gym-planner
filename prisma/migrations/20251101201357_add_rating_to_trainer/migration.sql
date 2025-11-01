@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Trainer" ADD COLUMN     "rating" DECIMAL(65,30) NOT NULL DEFAULT 0,
+ADD COLUMN     "votesCount" INTEGER NOT NULL DEFAULT 0;
