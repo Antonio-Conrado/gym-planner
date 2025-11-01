@@ -35,6 +35,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: "Admin User",
+      slug: "1-admin-user",
       email: "admin@gym.com",
       password: hashedPassword,
       role: "ADMIN",
@@ -46,6 +47,7 @@ async function main() {
   const trainerUser1 = await prisma.user.create({
     data: {
       name: "Carlos López",
+      slug: "2-carlos-lopez",
       email: "carlos@gym.com",
       password: hashedPassword,
       role: "TRAINER",
@@ -57,6 +59,7 @@ async function main() {
   const trainerUser2 = await prisma.user.create({
     data: {
       name: "María Fernández",
+      slug: "3-maria-fernandez",
       email: "maria@gym.com",
       password: hashedPassword,
       role: "TRAINER",
@@ -68,6 +71,7 @@ async function main() {
   const clientUser = await prisma.user.create({
     data: {
       name: "Juan Pérez",
+      slug: "4-juan-perez",
       email: "juan@gym.com",
       password: hashedPassword,
       role: "CLIENT",
