@@ -31,3 +31,13 @@ export function getDay(isoString: string): string {
     timeZone: "UTC",
   }).format(date);
 }
+
+export function getHour(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC",
+  }).format(date);
+}
