@@ -72,7 +72,7 @@ export function Nav({ session }: Props) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center justify-between w-1/4 gap-4">
+          <div className="hidden md:flex items-center justify-between w-fit gap-4 md:gap-8 lg:gap-12">
             {navGroupsWithDynamic.map((group) => {
               // Only show "Administrativo" group if there is an active session
               if (group.title === "Administrativo" && !session) return null;
