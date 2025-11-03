@@ -39,3 +39,13 @@ export enum PAYMENT_METHOD {
   CARD = "Tarjeta",
   TRANSFER = "Transferencia",
 }
+
+export enum NOTIFICATION_TYPE {
+  RESERVATION = "Reserva",
+  PAYMENT = "Pago",
+  PLAN_UPDATE = "Actualización de plan",
+  TRAINING_REQUEST = "Solicitud de entrenamiento",
+  CLIENT_TRAINING = "Cliente entrenando",
+  TRAINER_MESSAGE = "Mensaje del entrenador",
+  GENERAL = "General",
+}
