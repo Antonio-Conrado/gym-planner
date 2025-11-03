@@ -94,7 +94,7 @@ model User {
   name      String
   slug      String    @unique
   email     String    @unique
-  googleId  String?   @unique
+  googleId  String?
   telephone String?
   password  String?
   photo     String?
@@ -111,8 +111,6 @@ model User {
   Trainer           Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
   Notification      Notification[]
   ClientTrainerPlan ClientTrainerPlan[]
-
-  @@index([email, slug, id])
 }
 
 // =======================
@@ -137,6 +135,9 @@ model Trainer {
   reservations      Reservation[]
   TrainerReview     TrainerReview[]
   ClientTrainerPlan ClientTrainerPlan[]
+  Routine           Routine[]
+
+  @@index([userId])
 }
 
 // Optional: reviews of trainers by clients
@@ -149,6 +150,8 @@ model TrainerReview {
   rating    Int // 1-5
   comment   String?
   createdAt DateTime @default(now())
+
+  @@index([trainerId, clientId])
 }
 
 // =======================
@@ -166,6 +169,8 @@ model Schedule {
   updatedAt DateTime   @default(now()) @updatedAt
 
   reservations Reservation[]
+
+  @@index([trainerId])
 }
 
 // =======================
@@ -202,6 +207,8 @@ model ReservationHistory {
   notes         String?
   changedByRole Role
   changedAt     DateTime   @default(now())
+
+  @@index([reservationId])
 }
 
 model ClientTrainerPlan {
@@ -213,6 +220,8 @@ model ClientTrainerPlan {
   daysOfWeek DaysOfWeek[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @default(now()) @updatedAt
+
+  @@index([trainerId, clientId])
 }
 
 // =======================
@@ -220,46 +229,90 @@ model ClientTrainerPlan {
 // =======================
 
 model UserProgress {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  id                  Int                   @id @default(autoincrement())
+  userId              Int
+  user                User                  @relation(fields: [userId], references: [id])
+  weight              Float
+  height              Float?
+  updatedAt           DateTime              @default(now()) @updatedAt
+  UserProgressHistory UserProgressHistory[]
+  Routine             Routine[]
+  ProgressPhoto       ProgressPhoto[]
 
-  weight Float
-  height Float?
-  chest  Float?
-  waist  Float?
-  hips   Float?
-  biceps Float?
-  legs   Float?
-  calf   Float?
-
-  notes      String?
-  recordedAt DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  photos   ProgressPhoto[]
-  routines Routine[]
-
-  @@index([userId, recordedAt])
+  @@index([userId])
 }
 
-model Routine {
+model UserProgressHistory {
   id             Int          @id @default(autoincrement())
   userProgressId Int
   userProgress   UserProgress @relation(fields: [userProgressId], references: [id])
-  name           String
-  description    String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @default(now()) @updatedAt
+  weight         Float
+  height         Float?
+  chest          Float?
+  waist          Float?
+  hips           Float?
+  biceps         Float?
+  legs           Float?
+  calf           Float?
+  notes          String?
+  recordedAt     DateTime     @default(now())
+
+  @@index([userProgressId])
+}
+
+model Routine {
+  id              Int               @id @default(autoincrement())
+  userProgressId  Int
+  userProgress    UserProgress      @relation(fields: [userProgressId], references: [id])
+  trainerId       Int
+  trainer         Trainer           @relation(fields: [trainerId], references: [id])
+  name            String
+  description     String?
+  goal            String?
+  startDate       DateTime
+  endDate         DateTime
+  durationWeek    Int
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now()) @updatedAt
+  RoutineExercise RoutineExercise[]
+  RoutineLog      RoutineLog[]
+
+  @@index([trainerId, userProgressId])
+}
+
+model RoutineExercise {
+  id         Int        @id @default(autoincrement())
+  routineId  Int
+  routine    Routine    @relation(fields: [routineId], references: [id])
+  daysOfWeek DaysOfWeek
+  name       String
+  muscle     String
+  sets       Int
+  reps       String
+  notes      String?
+
+  @@index([routineId])
+}
+
+model RoutineLog {
+  id        Int      @id @default(autoincrement())
+  routineId Int
+  routine   Routine  @relation(fields: [routineId], references: [id])
+  date      DateTime
+  completed Boolean  @default(false)
+  notes     String?
+
+  @@index([routineId])
 }
 
 model ProgressPhoto {
   id             Int          @id @default(autoincrement())
   userProgressId Int
   userProgress   UserProgress @relation(fields: [userProgressId], references: [id])
-  url            String?
+  url            String[]
   createdAt      DateTime     @default(now())
+
+  @@index([userProgressId])
 }
 
 // =======================
@@ -280,7 +333,8 @@ model Payment {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now()) @updatedAt
 
-  @@index([id, userId])
+  @@index([userId, startDate, endDate, status])
+  @@index([paidAt])
 }
 
 model Notification {
@@ -292,4 +346,6 @@ model Notification {
   read      Boolean          @default(false)
   createdAt DateTime         @default(now())
   relatedId Int? // Optional ID of the related entity (reservation, payment, plan, etc.)
+
+  @@index([userId, type])
 }
