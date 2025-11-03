@@ -7,14 +7,19 @@ export enum status {
   ERROR = "ERROR",
 }
 
-export interface InitialState<T> {
+export interface InitialState<T, D = undefined> {
   message: string;
   errors: T;
+  data?: D;
   status: status;
 }
 
-export const createInitialState = <T>(errors: T): InitialState<T> => ({
+export const createInitialState = <T, D = undefined>(
+  errors: T,
+  data?: D
+): InitialState<T, D> => ({
   message: "",
   errors,
+  data,
   status: status.PENDING,
 });
