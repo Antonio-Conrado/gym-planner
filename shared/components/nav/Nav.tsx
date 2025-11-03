@@ -15,6 +15,8 @@ import {
   NavigationMenuLink,
 } from "@/shared/components/ui/navigation-menu";
 import NotificationsBell from "@/features/notifications/components/NotificationsBell";
+import { navGroups, clientLinks, generalLinks } from "@/shared/data/navLinks";
+import { Role } from "@/app/generated/prisma";
 
 type Props = {
   session: Session | null;
@@ -23,30 +25,37 @@ type Props = {
 export function Nav({ session }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const navGroups = [
-    {
-      title: "General",
-      links: [
-        { name: "Inicio", href: "/#home" },
-        { name: "Beneficios", href: "/#benefits" },
-        { name: "Instalaciones", href: "/#facilities" },
-      ],
-    },
-    {
-      title: "Servicios",
-      links: [
-        { name: "Planes", href: "/#plans" },
-        { name: "Entrenadores", href: "/trainers" },
-      ],
-    },
-    {
-      title: "Otros",
-      links: [
-        { name: "Testimonios", href: "/#testimonials" },
-        { name: "Contacto / Ubicación", href: "/#contact" },
-      ],
-    },
-  ];
+  // Append role-specific dynamic links to the group, generating URLs with the user's ID
+  const navGroupsWithDynamic = navGroups.map((group) => {
+    if (group.title !== "Administrativo") return group;
+
+    const updatedGroup = { ...group };
+
+    if (session) {
+      if (session.user.role === Role.CLIENT) {
+        // Append admin links plus client-specific dynamic links using the session ID
+        updatedGroup.links = [
+          ...updatedGroup.links,
+          ...clientLinks(Number(session.user.id)),
+          ...generalLinks(Number(session.user.id), Role.CLIENT),
+        ];
+      } else if (session.user.role === Role.TRAINER) {
+        // Append admin links plus trainer-specific dynamic links using the session ID
+        updatedGroup.links = [
+          ...updatedGroup.links,
+          ...generalLinks(Number(session.user.id), Role.TRAINER),
+        ];
+      } else if (session.user.role === Role.ADMIN) {
+        // Append admin links plus admin-specific dynamic links using the session ID
+        updatedGroup.links = [
+          ...updatedGroup.links,
+          ...generalLinks(Number(session.user.id), Role.ADMIN),
+        ];
+      }
+    }
+
+    return updatedGroup;
+  });
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -63,34 +72,51 @@ export function Nav({ session }: Props) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center justify-between w-1/4 gap-4 ">
-            {navGroups.map((group) => (
-              <NavigationMenu key={group.title}>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="px-2 py-1 text-black">
-                      {group.title}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-2 ">
-                        {group.links.map((link) => (
-                          <li key={link.name}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                href={link.href}
-                                className="flex w-full p-2 rounded-md hover:bg-gray-200 transition hover:text-gray-800"
-                              >
-                                {link.name}
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            ))}
+          <div className="hidden md:flex items-center justify-between w-1/4 gap-4">
+            {navGroupsWithDynamic.map((group) => {
+              // Only show "Administrativo" group if there is an active session
+              if (group.title === "Administrativo" && !session) return null;
+
+              return (
+                <NavigationMenu key={group.title}>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="px-2 py-1 text-black">
+                        {group.title}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[200px] gap-2">
+                          {group.links.map((link) => {
+                            // Validate role: only show the link if the user has the appropriate role
+                            if (
+                              link.roles &&
+                              (!session ||
+                                !session.user.role ||
+                                !link.roles.includes(session.user.role))
+                            ) {
+                              return null;
+                            }
+
+                            return (
+                              <li key={link.name}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    href={link.href}
+                                    className="flex w-full p-2 rounded-md hover:bg-gray-200 transition hover:text-gray-800"
+                                  >
+                                    {link.name}
+                                  </Link>
+                                </NavigationMenuLink>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              );
+            })}
           </div>
 
           {/* Desktop User */}
@@ -109,41 +135,65 @@ export function Nav({ session }: Props) {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="btn-gradient"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              {session && (
+                <NotificationsBell userId={Number(session.user.id)} />
               )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="btn-gradient"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <Menu className="w-6 h-6" />
+                  </div>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed w-full border-t border-gray-200 bg-white  shadow-2xl z-50">
+        <div className="md:hidden fixed w-full border-t border-gray-200 bg-white shadow-2xl z-50">
           <div className="px-4 py-3 space-y-2">
-            {navGroups.map((group) => (
-              <div key={group.title}>
-                <p className="font-medium text-gray-600 mb-1">{group.title}</p>
-                {group.links.map((link) => (
-                  <Link key={link.name} href={link.href}>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start hover:bg-gray-100 hover:text-gray-800 "
-                    >
-                      {link.name}
-                    </Button>
-                  </Link>
-                ))}
-              </div>
-            ))}
+            {navGroupsWithDynamic.map((group) => {
+              if (group.title === "Administrativo" && !session) return null;
+
+              return (
+                <div key={group.title}>
+                  <p className="font-medium text-gray-600 mb-1">
+                    {group.title}
+                  </p>
+                  {group.links.map((link) => {
+                    if (
+                      link.roles &&
+                      (!session ||
+                        !session.user.role ||
+                        !link.roles.includes(session.user.role))
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <Link key={link.name} href={link.href}>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start hover:bg-gray-100 hover:text-gray-800"
+                        >
+                          {link.name}
+                        </Button>
+                      </Link>
+                    );
+                  })}
+                </div>
+              );
+            })}
 
             {!session?.user ? (
               <Link href="/login">
