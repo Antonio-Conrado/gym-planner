@@ -14,6 +14,7 @@ import {
   NavigationMenuContent,
   NavigationMenuLink,
 } from "@/shared/components/ui/navigation-menu";
+import NotificationsBell from "@/features/notifications/components/NotificationsBell";
 
 type Props = {
   session: Session | null;
@@ -99,7 +100,10 @@ export function Nav({ session }: Props) {
                 <Button>Iniciar sesión</Button>
               </Link>
             ) : (
-              <UserAvatar session={session} isMobile={false} />
+              <div className="flex items-center gap-4">
+                <NotificationsBell userId={Number(session.user.id)} />
+                <UserAvatar session={session} isMobile={false} />
+              </div>
             )}
           </div>
 

@@ -22,6 +22,7 @@ import {
 } from "@/shared/components/ui/toggle-group";
 import { DAYS_OF_WEEK } from "@/lib/enum";
 import { createReservationWithTrainerAction } from "@/features/clients/action/createReservationWithTrainer-action";
+import { useAppStore } from "@/store/useStore";
 
 type Props = {
   client: Session | null;
@@ -38,6 +39,7 @@ export default function RequestTraining({
   const router = useRouter();
   const [activeReservation, setActiveReservation] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const setNotifications = useAppStore((state) => state.setNotifications);
 
   const handleRequest = async () => {
     if (!client) return router.push("/login");
@@ -62,8 +64,10 @@ export default function RequestTraining({
     if (reservation.status === status.ERROR) {
       toast.warning(reservation.message);
     }
-    if (reservation.status === status.COMPLETED)
-      return toast.success(reservation.message);
+    if (reservation.status === status.COMPLETED) {
+      setNotifications(); // Mark that there are new notifications so the NotificationsBell component updates its indicator
+      toast.success(reservation.message);
+    }
   };
 
   const isTrainer = client?.user?.role === Role.TRAINER;
