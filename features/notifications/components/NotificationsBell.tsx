@@ -64,7 +64,7 @@ export default function NotificationsBell({ userId }: { userId: number }) {
           <Bell className="w-6 h-6 text-gray-700 hover:cursor-pointer" />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-72 max-h-80 overflow-auto p-2 mr-20">
+        <DropdownMenuContent className="w-72 max-h-80 overflow-auto p-2 mr-5 md:mr-20">
           <DropdownMenuLabel className="font-semibold text-center text-gray-700">
             Notificaciones
           </DropdownMenuLabel>
