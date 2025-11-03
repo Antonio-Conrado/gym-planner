@@ -4,11 +4,12 @@ import prisma from "./prisma";
 import Credentials from "next-auth/providers/credentials";
 import { loginSchema } from "@/features/auth/schemas/login";
 import bcrypt from "bcrypt";
+import { slugify } from "./helpers/slugify";
 
 export const { handlers, auth, signOut } = NextAuth({
   providers: [
     Credentials({
-      //autenticar con email y password solamente
+      // Authenticate using only email and password
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
@@ -79,6 +80,7 @@ export const { handlers, auth, signOut } = NextAuth({
           data: {
             googleId: googleId ?? null,
             name: user.name!,
+            slug: slugify(user.name!),
             email,
             photo: user.image,
           },
