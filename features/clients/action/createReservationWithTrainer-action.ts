@@ -50,6 +50,19 @@ export async function createReservationWithTrainerAction({
       .map((day) => DAYS_OF_WEEK[day as keyof typeof DAYS_OF_WEEK])
       .join(", "); // "Lunes, Miércoles, Viernes. etc"
 
+    const existingPlan = await prisma.clientTrainerPlan.findFirst({
+      where: {
+        clientId,
+        trainerId,
+      },
+    });
+
+    if (existingPlan) {
+      throw new Error(
+        "Ya tienes un plan activo con este entrenador. Si deseas modificar los días, comunícate con tu entrenador."
+      );
+    }
+
     await prisma.$transaction([
       prisma.clientTrainerPlan.create({
         data: {
