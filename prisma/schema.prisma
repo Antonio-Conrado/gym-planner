@@ -54,6 +54,16 @@ enum PaymentMethod {
   TRANSFER
 }
 
+enum NotificationType {
+  RESERVATION
+  PAYMENT
+  PLAN_UPDATE
+  CLIENT_TRAINING
+  TRAINING_REQUEST
+  TRAINER_MESSAGE
+  GENERAL
+}
+
 // =======================
 // CATEGORIES AND SPECIALITIES
 // =======================
@@ -94,11 +104,13 @@ model User {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  reservations  Reservation[]
-  progress      UserProgress[]
-  payments      Payment[]
-  TrainerReview TrainerReview[]
-  Trainer       Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
+  reservations      Reservation[]
+  progress          UserProgress[]
+  payments          Payment[]
+  TrainerReview     TrainerReview[]
+  Trainer           Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
+  Notification      Notification[]
+  ClientTrainerPlan ClientTrainerPlan[]
 
   @@index([email, slug, id])
 }
@@ -110,7 +122,7 @@ model User {
 model Trainer {
   id           Int        @id @default(autoincrement())
   biography    String
-  rating       Decimal    @default(0)
+  rating       Float      @default(0)
   votesCount   Int        @default(0)
   userId       Int        @unique
   user         User       @relation(fields: [userId], references: [id])
@@ -121,9 +133,10 @@ model Trainer {
   updatedAt    DateTime   @default(now()) @updatedAt
   deletedAt    DateTime?
 
-  schedules     Schedule[]
-  reservations  Reservation[]
-  TrainerReview TrainerReview[]
+  schedules         Schedule[]
+  reservations      Reservation[]
+  TrainerReview     TrainerReview[]
+  ClientTrainerPlan ClientTrainerPlan[]
 }
 
 // Optional: reviews of trainers by clients
@@ -191,6 +204,17 @@ model ReservationHistory {
   changedAt     DateTime   @default(now())
 }
 
+model ClientTrainerPlan {
+  id         Int          @id @default(autoincrement())
+  clientId   Int
+  client     User         @relation(fields: [clientId], references: [id])
+  trainerId  Int
+  trainer    Trainer      @relation(fields: [trainerId], references: [id])
+  daysOfWeek DaysOfWeek[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+}
+
 // =======================
 // USER PROGRESS AND ROUTINES
 // =======================
@@ -200,14 +224,14 @@ model UserProgress {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  weight Decimal  @db.Decimal(5, 2)
-  height Decimal? @db.Decimal(5, 2)
-  chest  Decimal? @db.Decimal(5, 2)
-  waist  Decimal? @db.Decimal(5, 2)
-  hips   Decimal? @db.Decimal(5, 2)
-  biceps Decimal? @db.Decimal(5, 2)
-  legs   Decimal? @db.Decimal(5, 2)
-  calf   Decimal? @db.Decimal(5, 2)
+  weight Float
+  height Float?
+  chest  Float?
+  waist  Float?
+  hips   Float?
+  biceps Float?
+  legs   Float?
+  calf   Float?
 
   notes      String?
   recordedAt DateTime @default(now())
@@ -246,10 +270,26 @@ model Payment {
   id        Int           @id @default(autoincrement())
   userId    Int
   user      User          @relation(fields: [userId], references: [id])
-  amount    Decimal       @db.Decimal(10, 2)
+  amount    Float
   method    PaymentMethod
   concept   Concept
+  startDate DateTime
+  endDate   DateTime
+  status    StatusList    @default(COMPLETED)
   paidAt    DateTime      @default(now())
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now()) @updatedAt
+
+  @@index([id, userId])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType @default(GENERAL)
+  message   String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  relatedId Int? // Optional ID of the related entity (reservation, payment, plan, etc.)
 }
