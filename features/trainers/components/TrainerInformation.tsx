@@ -9,6 +9,8 @@ import { Star } from "lucide-react";
 
 import { Prisma } from "@/app/generated/prisma";
 import { getStarClasses } from "@/lib/helpers/getStarClasses";
+import { auth } from "@/lib/auth";
+import RequestTraining from "./RequestTraining";
 
 type TrainerWithDetails = Prisma.UserGetPayload<{
   include: {
@@ -25,8 +27,9 @@ type Props = {
   user: TrainerWithDetails;
 };
 
-export default function TrainerInformation({ user }: Props) {
+export default async function TrainerInformation({ user }: Props) {
   if (!user.Trainer) return null;
+  const client = await auth();
 
   const starClasses = getStarClasses(Number(user.Trainer?.rating));
   return (
@@ -34,9 +37,7 @@ export default function TrainerInformation({ user }: Props) {
       <CardHeader className="flex flex-col md:flex-row justify-center items-center gap-4">
         <div className="relative">
           <Image
-            src={
-              "https://images.unsplash.com/photo-1696563996353-214a3690bb11?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687"
-            }
+            src={user.photo ?? ""}
             alt={user.name}
             className="w-28 h-28 rounded-full object-cover ring-2 ring-gray-100"
             height={120}
@@ -64,14 +65,21 @@ export default function TrainerInformation({ user }: Props) {
             </span>
 
             {/* speciality */}
-            <span className="bg-orange-600 text-white px-2 py-0.5 rounded-md text-sm">
+            <span className="bg-orange-600 text-white px-2 py-0.5 rounded-md text-sm mx-auto">
               {user.Trainer.speciality.name}
             </span>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter></CardFooter>
+      <CardFooter>
+        <RequestTraining
+          client={client}
+          schedules={user.Trainer.schedules}
+          trainerId={user.Trainer.id}
+          trainerName={user.name}
+        />
+      </CardFooter>
     </Card>
   );
 }
