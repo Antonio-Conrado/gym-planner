@@ -56,9 +56,7 @@ export default async function Page() {
               {/* Avatar */}
               <div className="relative ">
                 <Image
-                  src={
-                    "https://images.unsplash.com/photo-1696563996353-214a3690bb11?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=687"
-                  }
+                  src={trainer.user.photo ?? ""}
                   alt={trainer.user.name}
                   className="w-28 h-28 rounded-full object-cover ring-2 ring-gray-100"
                   height={120}
@@ -72,7 +70,7 @@ export default async function Page() {
                   {trainer.user.name}
                 </CardTitle>
 
-                <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 mt-1 flex-wrap">
+                <div className="flex flex-col lg:flex-row items-center md:items-start gap-2 mt-1 flex-wrap">
                   {/* Stars */}
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
@@ -93,7 +91,7 @@ export default async function Page() {
                   </span>
 
                   {/* speciality */}
-                  <span className="bg-orange-600 text-white px-2 py-0.5 rounded-md text-sm">
+                  <span className="bg-orange-600 text-white px-2 py-0.5 rounded-md text-sm ">
                     {trainer.speciality.name}
                   </span>
                 </div>
