@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Dumbbell, Menu, X } from "lucide-react";
 import UserAvatar from "./userAvatar";
@@ -17,13 +17,25 @@ import {
 import NotificationsBell from "@/features/notifications/components/NotificationsBell";
 import { navGroups, clientLinks, generalLinks } from "@/shared/data/navLinks";
 import { Role } from "@/app/generated/prisma";
+import { useSession } from "next-auth/react";
 
 type Props = {
   session: Session | null;
 };
 
-export function Nav({ session }: Props) {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+// Get initial session from props to prevent UI flashes (login button/avatar) on first render
+export function Nav({ session: sessionProp }: Props) {
+  // useSession hook keeps the session up-to-date on the client
+  const { data: updatedSession } = useSession();
+  // Local state for session, initialized from server-side props
+  const [session, setSession] = useState(sessionProp);
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Update local session whenever client session changes (login/logout)
+  useEffect(() => {
+    setSession(updatedSession);
+  }, [updatedSession]);
 
   // Append role-specific dynamic links to the group, generating URLs with the user's ID
   const navGroupsWithDynamic = navGroups.map((group) => {
