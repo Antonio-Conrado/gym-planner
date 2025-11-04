@@ -1,15 +1,17 @@
 import InfoCard from "@/shared/components/dashboard/InfoCard";
 import { Activity, Dumbbell, Users } from "lucide-react";
-import { getTrainerDashboardData } from "../actions/getTrainerDashboardData-action";
+
+type Props = {
+  totalClients: number | undefined;
+  activeClients: number | undefined;
+  totalRoutines: number | undefined;
+};
 
 export default async function TrainerInfoCards({
-  trainerId,
-}: {
-  trainerId: number;
-}) {
-  const { totalClients, activeClients, totalRoutines } =
-    await getTrainerDashboardData(trainerId);
-
+  totalClients,
+  activeClients,
+  totalRoutines,
+}: Props) {
   const displayValue = (value?: number) => value?.toString() ?? "--";
 
   return (
