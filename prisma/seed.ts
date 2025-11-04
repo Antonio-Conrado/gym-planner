@@ -1,4 +1,4 @@
-import { PrismaClient } from "../app/generated/prisma";
+import { DaysOfWeek, PrismaClient } from "../app/generated/prisma";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -414,7 +414,7 @@ async function main() {
   await prisma.clientTrainerPlan.create({
     data: {
       clientId: clientWithTrainer.id,
-      trainerId: trainer1.id,
+      trainerId: trainerUser1.id,
       daysOfWeek: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY"],
     },
   });
@@ -466,6 +466,88 @@ async function main() {
       },
     ],
   });
+
+  // ================================
+  const additionalClientsData = [
+    { name: "Ana Torres", email: "ana@gym.com", telephone: "55555531" },
+    { name: "Luis Gómez", email: "luis@gym.com", telephone: "55555532" },
+    { name: "Marta López", email: "marta@gym.com", telephone: "55555533" },
+    { name: "Jorge Díaz", email: "jorge@gym.com", telephone: "55555534" },
+    { name: "Sofía Ramírez", email: "sofia@gym.com", telephone: "55555535" },
+    { name: "Diego Morales", email: "diego@gym.com", telephone: "55555536" },
+    { name: "Carla Pérez", email: "carla@gym.com", telephone: "55555537" },
+    { name: "Andrés Vargas", email: "andres@gym.com", telephone: "55555538" },
+    { name: "Lucía Hernández", email: "lucia@gym.com", telephone: "55555539" },
+    {
+      name: "Fernando Castro",
+      email: "fernando@gym.com",
+      telephone: "55555540",
+    },
+    { name: "Isabel Molina", email: "isabel@gym.com", telephone: "55555541" },
+    { name: "Ricardo Salas", email: "ricardo@gym.com", telephone: "55555542" },
+    {
+      name: "Valeria Jiménez",
+      email: "valeria@gym.com",
+      telephone: "55555543",
+    },
+    { name: "Mario Aguilar", email: "mario@gym.com", telephone: "55555544" },
+    {
+      name: "Patricia Rojas",
+      email: "patricia@gym.com",
+      telephone: "55555545",
+    },
+    {
+      name: "Sebastián Ortiz",
+      email: "sebastian@gym.com",
+      telephone: "55555546",
+    },
+    { name: "Camila Fuentes", email: "camila@gym.com", telephone: "55555547" },
+    { name: "Javier Peña", email: "javier@gym.com", telephone: "55555548" },
+    { name: "Daniela Bravo", email: "daniela@gym.com", telephone: "55555549" },
+    { name: "Gabriel León", email: "gabriel@gym.com", telephone: "55555550" },
+  ];
+
+  const additionalClients = [];
+  let slugCounter = 6;
+
+  for (const clientData of additionalClientsData) {
+    const client = await prisma.user.create({
+      data: {
+        name: clientData.name,
+        slug: `${slugCounter}-${clientData.name
+          .toLowerCase()
+          .replace(/ /g, "-")}`,
+        email: clientData.email,
+        password: hashedPassword,
+        role: "CLIENT",
+        telephone: clientData.telephone,
+        photo: `https://i.pravatar.cc/150?img=${slugCounter + 10}`,
+      },
+    });
+    additionalClients.push(client);
+    slugCounter++;
+  }
+  // ================================
+  // CLIENT TRAINER PLAN
+  // ================================
+  const daysOptions = [
+    [DaysOfWeek.MONDAY, DaysOfWeek.WEDNESDAY, DaysOfWeek.FRIDAY],
+    [DaysOfWeek.TUESDAY, DaysOfWeek.THURSDAY, DaysOfWeek.SATURDAY],
+    [DaysOfWeek.MONDAY, DaysOfWeek.TUESDAY, DaysOfWeek.THURSDAY],
+    [DaysOfWeek.WEDNESDAY, DaysOfWeek.FRIDAY, DaysOfWeek.SATURDAY],
+  ];
+  for (let i = 0; i < additionalClients.length; i++) {
+    const client = additionalClients[i];
+    const daysOfWeek = daysOptions[i % daysOptions.length];
+
+    await prisma.clientTrainerPlan.create({
+      data: {
+        clientId: client.id,
+        trainerId: trainerUser1.id,
+        daysOfWeek,
+      },
+    });
+  }
 
   console.log("✅ Seed ejecutado correctamente");
 }
