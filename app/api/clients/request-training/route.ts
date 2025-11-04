@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   // Authenticate the user
   const session = await auth();
-  console.log(session);
 
   // Check if the user is authenticated
   if (!session || !session.user) {

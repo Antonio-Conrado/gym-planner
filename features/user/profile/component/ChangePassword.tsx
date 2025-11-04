@@ -46,7 +46,6 @@ export default function ChangePasswordForm({ userId, hasPassword }: Props) {
   });
 
   const onSubmit = (data: changePassword) => {
-    console.log(data);
     const formData = new FormData();
     Object.entries({ ...data, userId }).forEach(([key, value]) => {
       formData.append(key, value as string);
