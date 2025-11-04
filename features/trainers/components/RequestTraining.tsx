@@ -1,6 +1,6 @@
 "use client";
 import { Role, Schedule, Trainer, User } from "@/app/generated/prisma";
-import { requesTrainingAction } from "@/features/clients/action/requestTraining-action";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,11 +43,15 @@ export default function RequestTraining({
 
   const handleRequest = async () => {
     if (!client) return router.push("/login");
+    const response = await fetch(
+      `/api/clients/request-training?clientId=${client.user.id}`
+    );
 
-    const user = await requesTrainingAction(Number(client.user.id));
+    const user = await response.json();
     if (user.status === status.ERROR) {
       toast.warning(user.message);
       router.push("/#plans");
+      return;
     }
     if (user.status === status.COMPLETED) return setActiveReservation(true);
   };

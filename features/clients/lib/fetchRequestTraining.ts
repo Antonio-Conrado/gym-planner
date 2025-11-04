@@ -1,9 +1,7 @@
-"use server";
-
 import prisma from "@/lib/prisma";
 import { InitialState, status } from "@/shared/interfaces/initialStateAction";
 
-export async function requesTrainingAction(
+export async function fetchRequestTraining(
   clientId: number
 ): Promise<InitialState<[]>> {
   try {
