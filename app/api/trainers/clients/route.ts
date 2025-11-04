@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   // Check if the user is authenticated
   if (!session || !session.user) {
     return NextResponse.json(
-      { error: "unauthorized", message: "User is not authenticated" },
+      { error: "no_autorizado", message: "El usuario no está autenticado" },
       { status: 401 }
     );
   }
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   // Check if the user has the TRAINER role
   if (session.user.role !== Role.TRAINER) {
     return NextResponse.json(
-      { error: "forbidden", message: "Access restricted to trainers only" },
+      { error: "prohibido", message: "Acceso restringido solo a entrenadores" },
       { status: 403 }
     );
   }
@@ -34,7 +34,10 @@ export async function GET(req: Request) {
   // Validate required parameter
   if (!trainerId) {
     return NextResponse.json(
-      { error: "bad_request", message: "Parameter 'trainerId' is required" },
+      {
+        error: "solicitud_invalida",
+        message: "El parámetro 'trainerId' es obligatorio",
+      },
       { status: 400 }
     );
   }
