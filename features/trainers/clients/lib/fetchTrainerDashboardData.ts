@@ -1,8 +1,6 @@
-"use server";
-
 import prisma from "@/lib/prisma";
 
-export async function getTrainerDashboardData(trainerId: number) {
+export async function fetchTrainerDashboardData(trainerId: number) {
   try {
     const [totalClients, activeClients, totalRoutines] =
       await prisma.$transaction([

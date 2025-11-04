@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { Role } from "@/app/generated/prisma";
+import { fetchTrainerDashboardData } from "@/features/trainers/clients/lib/fetchTrainerDashboardData";
+import ClientList from "@/features/trainers/clients/components/ClientList";
 import TrainerInfoCards from "@/features/trainers/clients/components/TrainerInfoCards";
 import { auth } from "@/lib/auth";
 import {
@@ -6,7 +9,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
-import Link from "next/link";
+import { fetchTrainerClients } from "@/features/trainers/clients/lib/fetchTrainerClients";
 
 export default async function Page() {
   const trainer = await auth();
@@ -33,6 +36,12 @@ export default async function Page() {
     );
   }
 
+  const { totalClients, activeClients, totalRoutines } =
+    await fetchTrainerDashboardData(Number(trainer.user.id));
+
+  // Get the first 10 clients of the trainer
+  const { clients } = await fetchTrainerClients(Number(trainer.user.id));
+
   return (
     <div className="min-h-screen  p-6 ">
       <div className="mb-10">
@@ -44,7 +53,24 @@ export default async function Page() {
         </p>
       </div>
 
-      <TrainerInfoCards trainerId={Number(trainer.user.id)} />
+      <TrainerInfoCards
+        totalClients={totalClients}
+        activeClients={activeClients}
+        totalRoutines={totalRoutines}
+      />
+
+      {totalClients !== undefined ? (
+        <ClientList
+          initialClients={clients}
+          totalClients={totalClients}
+          trainerId={Number(trainer.user.id)}
+        />
+      ) : (
+        <p className="text-gray-700">
+          No se pudieron cargar los clientes en este momento. Por favor, intenta
+          nuevamente más tarde.
+        </p>
+      )}
     </div>
   );
 }
