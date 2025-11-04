@@ -1,10 +1,8 @@
-"use server";
-
 import { Notification } from "@/app/generated/prisma";
 import prisma from "@/lib/prisma";
 import { InitialState, status } from "@/shared/interfaces/initialStateAction";
 
-export async function getNotificationsAction(
+export async function fetchNotifications(
   userId: number
 ): Promise<InitialState<[], Notification[]>> {
   try {

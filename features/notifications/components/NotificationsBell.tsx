@@ -2,7 +2,6 @@
 
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getNotificationsAction } from "../action/getNotifications-action";
 import { Notification } from "@/app/generated/prisma";
 import {
   DropdownMenu,
@@ -27,7 +26,8 @@ export default function NotificationsBell({ userId }: { userId: number }) {
 
   useEffect(() => {
     const load = async () => {
-      const res = await getNotificationsAction(userId);
+      const notifications = await fetch(`/api/notifications?userId=${userId}`);
+      const res = await notifications.json();
       if (res.status === status.SUCCESS && res.data) {
         setNotifications(res.data);
       }
