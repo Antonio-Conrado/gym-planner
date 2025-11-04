@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { Nav } from "@/shared/components/nav/Nav";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/lib/auth";
+import { AppProvider } from "@/providers/AppProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +35,13 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
       >
-        <SessionProvider session={session}>
-          <Nav session={session} />
-          {children}
-          <Toaster position="top-right" />
-        </SessionProvider>
+        <AppProvider>
+          <SessionProvider session={session}>
+            <Nav session={session} />
+            {children}
+            <Toaster position="top-right" />
+          </SessionProvider>
+        </AppProvider>
       </body>
     </html>
   );
