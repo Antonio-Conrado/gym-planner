@@ -105,7 +105,7 @@ model User {
   deletedAt DateTime?
 
   reservations      Reservation[]
-  progress          UserProgress[]
+  progress          UserProgress?
   payments          Payment[]
   TrainerReview     TrainerReview[]
   Trainer           Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
@@ -230,7 +230,7 @@ model ClientTrainerPlan {
 
 model UserProgress {
   id                  Int                   @id @default(autoincrement())
-  userId              Int
+  userId              Int                   @unique
   user                User                  @relation(fields: [userId], references: [id])
   weight              Float
   height              Float?
