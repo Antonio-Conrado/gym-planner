@@ -1,10 +1,16 @@
-import { Role } from "@/app/generated/prisma";
+import { Role, UserProgressHistory } from "@/app/generated/prisma";
 import ClientCurrentProgress from "@/features/clients/client/components/ClientCurrentProgress";
 import ClientInfoCard from "@/features/clients/client/components/ClientInfoCard";
 import ClientProgressHistory from "@/features/clients/client/components/ClientProgressHistory";
 
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
 import {
   Tabs,
   TabsContent,
@@ -44,19 +50,23 @@ export default async function Page({ params }: Props) {
     (plan) => plan.daysOfWeek || []
   ).filter((day, index, self) => self.indexOf(day) === index); // Remove duplicate days by keeping only the first occurrence of each day
 
-  const [clientProgressHistory, totalClientProgressHistory] = await Promise.all(
-    [
+  // Fetch the data if the client already has registered progress measurements.
+  let clientProgressHistory: UserProgressHistory[] = [];
+  let totalClientProgressHistory = 0;
+
+  if (client.progress) {
+    [clientProgressHistory, totalClientProgressHistory] = await Promise.all([
       prisma.userProgressHistory.findMany({
-        where: { userProgressId: client.progress?.id },
+        where: { userProgressId: client.progress.id },
         orderBy: { recordedAt: "desc" },
         take: 5,
         skip: 0,
       }),
       prisma.userProgressHistory.count({
-        where: { userProgressId: client.progress?.id },
+        where: { userProgressId: client.progress.id },
       }),
-    ]
-  );
+    ]);
+  }
 
   return (
     <div className="py-6 md:py-14 px-6 min-h-[80vh] flex flex-col gap-5">
@@ -99,18 +109,28 @@ export default async function Page({ params }: Props) {
         </TabsList>
 
         <TabsContent value="clientCurrentProgress">
-          <ClientCurrentProgress />
+          <ClientCurrentProgress
+            currentProgress={clientProgressHistory[0] ?? null}
+            userProgressId={client.id}
+          />
         </TabsContent>
         <TabsContent value="routines"></TabsContent>
         <TabsContent value="photos"></TabsContent>
       </Tabs>
 
-      {client.progress && (
+      {client.progress ? (
         <ClientProgressHistory
           userProgressId={client.progress.id}
           initialDataClientProgressHistory={clientProgressHistory}
           totalClientProgressHistory={totalClientProgressHistory}
         />
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Historial de medidas</CardTitle>
+            <CardDescription>No hay registros aún.</CardDescription>
+          </CardHeader>
+        </Card>
       )}
     </div>
   );
