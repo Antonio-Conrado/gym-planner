@@ -19,6 +19,8 @@ import Link from "next/link";
 import { DAYS_OF_WEEK } from "@/lib/enum";
 import { Badge } from "@/shared/components/ui/badge";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { getMonthYear } from "@/lib/helpers/formatDate";
+import { Mail, Phone } from "lucide-react";
 
 type Props = {
   initialClients: ClientTrainerPlanData[];
@@ -80,9 +82,8 @@ export default function ClientList({
           <TableHeader>
             <TableRow>
               <TableHead className="text-center">Foto</TableHead>
-              <TableHead className="text-center">Nombre</TableHead>
-              <TableHead className="text-center">Correo electrónico</TableHead>
-              <TableHead className="text-center">Teléfono</TableHead>
+              <TableHead className="text-center">Cliente</TableHead>
+              <TableHead className="text-center">Contacto</TableHead>
               <TableHead className="text-center">
                 Días de entrenamiento
               </TableHead>
@@ -120,16 +121,23 @@ export default function ClientList({
                   {/* Name */}
                   <TableCell className="text-center">
                     {client.client.name}
+                    <span className="block text-gray-600">
+                      Desde {getMonthYear(client.createdAt.toString())}
+                    </span>
                   </TableCell>
 
-                  {/* Email */}
+                  {/* Email and Telephone */}
                   <TableCell className="text-center">
-                    {client.client.email}
-                  </TableCell>
-
-                  {/* Telephone */}
-                  <TableCell className="text-center">
-                    {client.client.telephone}
+                    <span className="flex items-center gap-2 text-gray-700">
+                      <Mail className="h-3 w-3 " />
+                      {client.client.email}
+                    </span>
+                    {client.client.telephone && (
+                      <span className="flex items-center gap-2 text-gray-700">
+                        <Phone className="h-3 w-3 " />
+                        {client.client.telephone}
+                      </span>
+                    )}
                   </TableCell>
 
                   {/* Days of week */}
