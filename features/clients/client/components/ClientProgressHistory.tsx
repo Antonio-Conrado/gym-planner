@@ -12,8 +12,8 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Spinner } from "@/shared/components/ui/spinner";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 type Props = {
   userProgressId: number;
@@ -42,16 +42,23 @@ export default function ClientProgressHistory({
       const response = await fetch(
         `/api/clients/client-progress-history?${params.toString()}`
       );
-      if (!response.ok) throw new Error("Error fetching user progress history");
+      if (!response.ok)
+        throw new Error("Error al obtener el progreso del usuario");
       return response.json();
     },
-
     placeholderData: { userProgressHistory: initialDataClientProgressHistory },
     staleTime: 1000 * 60 * 5,
     enabled: !!page,
   });
 
-  const userProgressHistory: UserProgressHistory[] =
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.setQueryData(["clientProgressHistory", userProgressId, 1], {
+      userProgressHistory: initialDataClientProgressHistory,
+    });
+  }, [initialDataClientProgressHistory, queryClient, userProgressId]);
+
+  const userProgressHistory: UserProgressHistory[] | [] =
     data.userProgressHistory ?? [];
 
   if (userProgressHistory.length === 0) {
@@ -83,6 +90,7 @@ export default function ClientProgressHistory({
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-gray-600">
                     {formatDate(record.recordedAt.toString())}
+                    <span>{record.notes ?? "--"}</span>
                   </p>
                   <Badge variant="outline">{record.weight} kg</Badge>
                 </div>
@@ -92,9 +100,17 @@ export default function ClientProgressHistory({
                 )}
 
                 <ul className="grid grid-cols-2 gap-2">
+                  {/* height */}
+                  <li className="text-sm text-gray-700">
+                    Altura:{" "}
+                    <span className="text-gray-900">
+                      {record.height != null ? `${record.height} cm` : "--"}
+                    </span>
+                  </li>
+
                   {/* Chest */}
                   <li className="text-sm text-gray-700">
-                    Chest:{" "}
+                    Pecho:{" "}
                     <span className="text-gray-900">
                       {record.chest != null ? `${record.chest} cm` : "--"}
                     </span>
@@ -102,7 +118,7 @@ export default function ClientProgressHistory({
 
                   {/* Waist */}
                   <li className="text-sm text-gray-700">
-                    Waist:{" "}
+                    Cintura:{" "}
                     <span className="text-gray-900">
                       {record.waist != null ? `${record.waist} cm` : "--"}
                     </span>
@@ -110,7 +126,7 @@ export default function ClientProgressHistory({
 
                   {/* Hips */}
                   <li className="text-sm text-gray-700">
-                    Hips:{" "}
+                    Cadera:{" "}
                     <span className="text-gray-900">
                       {record.hips != null ? `${record.hips} cm` : "--"}
                     </span>
@@ -118,7 +134,7 @@ export default function ClientProgressHistory({
 
                   {/* Biceps */}
                   <li className="text-sm text-gray-700">
-                    Biceps:{" "}
+                    Bíceps:{" "}
                     <span className="text-gray-900">
                       {record.biceps != null ? `${record.biceps} cm` : "--"}
                     </span>
@@ -126,7 +142,7 @@ export default function ClientProgressHistory({
 
                   {/* Legs */}
                   <li className="text-sm text-gray-700">
-                    Legs:{" "}
+                    Piernas:{" "}
                     <span className="text-gray-900">
                       {record.legs != null ? `${record.legs} cm` : "--"}
                     </span>
@@ -134,7 +150,7 @@ export default function ClientProgressHistory({
 
                   {/* Calves */}
                   <li className="text-sm text-gray-700">
-                    Calves:{" "}
+                    Pantorrillas:{" "}
                     <span className="text-gray-900">
                       {record.calf != null ? `${record.calf} cm` : "--"}
                     </span>
@@ -145,7 +161,7 @@ export default function ClientProgressHistory({
           </>
         )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col items-end">
         <Pagination
           total={totalClientProgressHistory}
           page={page}
