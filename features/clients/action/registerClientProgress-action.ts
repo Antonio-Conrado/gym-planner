@@ -9,7 +9,6 @@ import { clientProgressFormInitialValues } from "./../schema/clientProgress";
 import z from "zod";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
-import { da } from "zod/v4/locales";
 
 export async function registerClientProgressAction(
   userProgressId: number,
