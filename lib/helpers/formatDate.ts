@@ -32,6 +32,14 @@ export function getDay(isoString: string): string {
   }).format(date);
 }
 
+export function getMonthYear(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
 export function getHour(isoString: string): string {
   const date = new Date(isoString);
   return new Intl.DateTimeFormat("es-ES", {
