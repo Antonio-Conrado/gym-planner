@@ -158,7 +158,7 @@ export default function ClientList({
                   {/* Actions */}
                   <TableCell className="text-center">
                     <Link
-                      href={`/clients/${client.id}`}
+                      href={`/clients/${client.clientId}`}
                       className="text-white bg-orange-600 p-2 rounded-md"
                     >
                       Ver detalles
