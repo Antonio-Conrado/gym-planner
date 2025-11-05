@@ -7,6 +7,15 @@ export function formatDate(isoString: string): string {
   }).format(date);
 }
 
+export function formatDateToDDMMYYYY(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("es-ES", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
 export function getYear(isoString: string): string {
   const date = new Date(isoString);
   return new Intl.DateTimeFormat("es-ES", {
