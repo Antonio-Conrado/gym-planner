@@ -1,9 +1,10 @@
-import { Role, UserProgressHistory } from "@/app/generated/prisma";
+import { Role, Routine, UserProgressHistory } from "@/app/generated/prisma";
 import ClientCurrentProgress from "@/features/clients/client/components/ClientCurrentProgress";
 import ClientInfoCard from "@/features/clients/client/components/ClientInfoCard";
 import ClientProgressHistory from "@/features/clients/client/components/ClientProgressHistory";
 import ClientProgressPhotos from "@/features/clients/client/components/ClientProgressPhotos";
 import ClientRoutines from "@/features/clients/client/components/ClientRoutines";
+import ClientRoutinesHistory from "@/features/clients/client/components/ClientRoutinesHistory";
 
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
@@ -54,10 +55,17 @@ export default async function Page({ params }: Props) {
 
   // Fetch the data if the client already has registered progress measurements.
   let clientProgressHistory: UserProgressHistory[] = [];
+  let clientRoutinesHistory: Routine[] = [];
   let totalClientProgressHistory = 0;
+  let totalClientRoutineHistory = 0;
 
   if (client.progress) {
-    [clientProgressHistory, totalClientProgressHistory] = await Promise.all([
+    [
+      clientProgressHistory,
+      totalClientProgressHistory,
+      clientRoutinesHistory,
+      totalClientRoutineHistory,
+    ] = await Promise.all([
       prisma.userProgressHistory.findMany({
         where: { userProgressId: client.progress.id },
         orderBy: { recordedAt: "desc" },
@@ -67,8 +75,17 @@ export default async function Page({ params }: Props) {
       prisma.userProgressHistory.count({
         where: { userProgressId: client.progress.id },
       }),
+
+      await prisma.routine.findMany({
+        where: { userProgressId: client.progress.id },
+        orderBy: { id: "desc" },
+      }),
+      prisma.userProgressHistory.count({
+        where: { userProgressId: client.progress.id },
+      }),
     ]);
   }
+
   return (
     <div className="py-6 md:py-14 px-6 min-h-[80vh] flex flex-col gap-5">
       <div className="block md:relative md:bottom-12 mb-4 md:mb-0 w-52 ">
@@ -137,6 +154,23 @@ export default async function Page({ params }: Props) {
             userProgressId={client.progress?.id ?? null}
             clientName={client.name}
           />
+
+          <div className="mt-5">
+            {client.progress ? (
+              <ClientRoutinesHistory
+                userProgressId={client.progress.id}
+                initialDataClientRoutinesHistory={clientRoutinesHistory}
+                totalClientRoutinesHistory={totalClientRoutineHistory}
+              />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Historial de rutinas</CardTitle>
+                  <CardDescription>No hay registros aún.</CardDescription>
+                </CardHeader>
+              </Card>
+            )}
+          </div>
         </TabsContent>
         <TabsContent value="photos">
           <ClientProgressPhotos userProgressId={client.progress?.id ?? null} />
