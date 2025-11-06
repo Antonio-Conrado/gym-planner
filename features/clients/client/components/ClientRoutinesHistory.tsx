@@ -1,8 +1,7 @@
 "use client";
-import { Routine, UserProgressHistory } from "@/app/generated/prisma";
-import { formatDate, formatDateToDDMMYYYY } from "@/lib/helpers/formatDate";
+import { Routine } from "@/app/generated/prisma";
+import { formatDateToDDMMYYYY } from "@/lib/helpers/formatDate";
 import Pagination from "@/shared/components/table/Pagination";
-import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
