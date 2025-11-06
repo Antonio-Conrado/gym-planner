@@ -79,7 +79,8 @@ export async function createClientRoutineAction(
     });
 
     return {
-      message: "Rutina creada con éxito.",
+      message:
+        "¡Rutina registrada correctamente! Has definido la información general. El siguiente paso es agregar los detalles de ejercicios, sets, repeticiones entre otros datos",
       data: routine.id,
       errors: routineFormInitialValues,
       status: status.COMPLETED,

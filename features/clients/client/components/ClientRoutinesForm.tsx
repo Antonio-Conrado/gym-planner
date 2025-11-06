@@ -43,7 +43,7 @@ export function ClientRoutinesForm({
   userProgressId,
 }: Props) {
   const router = useRouter();
-  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>();
 
   const createClientRoutineWIthId = createClientRoutineAction.bind(
@@ -86,6 +86,11 @@ export function ClientRoutinesForm({
         toast.success(state.message);
         reset();
         router.push(`/clients/routines/${state.data}`);
+        setTimeout(() => {
+          reset();
+          setStartDate(undefined);
+          setEndDate(undefined);
+        }, 0);
       }
       if (state.status === status.ERROR) toast.error(state.message);
     }

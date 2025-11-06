@@ -1,4 +1,3 @@
-import prisma from "@/lib/prisma";
 import {
   Card,
   CardContent,
@@ -21,7 +20,7 @@ export default async function ClientRoutines({
   clientName,
 }: Props) {
   const session = await auth();
-  if (!session || session.user.role !== Role.TRAINER) return null;
+  if (!session) return null;
 
   if (!userProgressId)
     return (
@@ -44,8 +43,6 @@ export default async function ClientRoutines({
       </Card>
     );
 
-  const routines = await prisma.routine.findMany({ where: { userProgressId } });
-
   return (
     <Card>
       <CardHeader className="flex justify-between items-center">
@@ -53,12 +50,26 @@ export default async function ClientRoutines({
           <CardTitle>Rutinas de entrenamiento</CardTitle>
           <CardDescription>Planes de ejercicios asignados</CardDescription>
         </div>
-        <ClientRoutinesForm
-          clientName={clientName}
-          trainerId={Number(session.user.id)}
-          userProgressId={userProgressId}
-        />
       </CardHeader>
+      <CardContent>
+        {session.user.role === Role.TRAINER && (
+          <div>
+            <CardContent>
+              <div className="flex flex-col justify-center items-center gap-3">
+                <Dumbbell className="h-20 w-20 text-gray-300" />
+                <p className="text-gray-700 text-lg">
+                  No hay rutinas asignadas aún
+                </p>
+                <ClientRoutinesForm
+                  clientName={clientName}
+                  trainerId={Number(session.user.id)}
+                  userProgressId={userProgressId}
+                />
+              </div>
+            </CardContent>
+          </div>
+        )}
+      </CardContent>
     </Card>
   );
 }
