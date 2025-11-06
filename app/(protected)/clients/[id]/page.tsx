@@ -2,6 +2,7 @@ import { Role, UserProgressHistory } from "@/app/generated/prisma";
 import ClientCurrentProgress from "@/features/clients/client/components/ClientCurrentProgress";
 import ClientInfoCard from "@/features/clients/client/components/ClientInfoCard";
 import ClientProgressHistory from "@/features/clients/client/components/ClientProgressHistory";
+import ClientProgressPhotos from "@/features/clients/client/components/ClientProgressPhotos";
 
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
@@ -67,7 +68,6 @@ export default async function Page({ params }: Props) {
       }),
     ]);
   }
-
   return (
     <div className="py-6 md:py-14 px-6 min-h-[80vh] flex flex-col gap-5">
       <div className="block md:relative md:bottom-12 mb-4 md:mb-0 w-52 ">
@@ -105,7 +105,7 @@ export default async function Page({ params }: Props) {
         <TabsList className="w-full">
           <TabsTrigger value="clientCurrentProgress">Progreso</TabsTrigger>
           <TabsTrigger value="routines">Rutinas</TabsTrigger>
-          <TabsTrigger value="Photos">Fotos</TabsTrigger>
+          <TabsTrigger value="photos">Fotos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="clientCurrentProgress">
@@ -115,7 +115,9 @@ export default async function Page({ params }: Props) {
           />
         </TabsContent>
         <TabsContent value="routines"></TabsContent>
-        <TabsContent value="photos"></TabsContent>
+        <TabsContent value="photos">
+          <ClientProgressPhotos userProgressId={client.progress?.id ?? null} />
+        </TabsContent>
       </Tabs>
 
       {client.progress ? (
