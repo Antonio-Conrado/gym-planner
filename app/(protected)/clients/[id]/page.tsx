@@ -3,6 +3,7 @@ import ClientCurrentProgress from "@/features/clients/client/components/ClientCu
 import ClientInfoCard from "@/features/clients/client/components/ClientInfoCard";
 import ClientProgressHistory from "@/features/clients/client/components/ClientProgressHistory";
 import ClientProgressPhotos from "@/features/clients/client/components/ClientProgressPhotos";
+import ClientRoutines from "@/features/clients/client/components/ClientRoutines";
 
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
@@ -114,7 +115,12 @@ export default async function Page({ params }: Props) {
             userProgressId={client.id}
           />
         </TabsContent>
-        <TabsContent value="routines"></TabsContent>
+        <TabsContent value="routines">
+          <ClientRoutines
+            userProgressId={client.progress?.id ?? null}
+            clientName={client.name}
+          />
+        </TabsContent>
         <TabsContent value="photos">
           <ClientProgressPhotos userProgressId={client.progress?.id ?? null} />
         </TabsContent>
