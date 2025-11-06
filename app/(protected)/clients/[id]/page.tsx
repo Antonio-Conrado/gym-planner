@@ -114,6 +114,23 @@ export default async function Page({ params }: Props) {
             currentProgress={clientProgressHistory[0] ?? null}
             userProgressId={client.id}
           />
+
+          <div className="mt-5">
+            {client.progress ? (
+              <ClientProgressHistory
+                userProgressId={client.progress.id}
+                initialDataClientProgressHistory={clientProgressHistory}
+                totalClientProgressHistory={totalClientProgressHistory}
+              />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Historial de medidas</CardTitle>
+                  <CardDescription>No hay registros aún.</CardDescription>
+                </CardHeader>
+              </Card>
+            )}
+          </div>
         </TabsContent>
         <TabsContent value="routines">
           <ClientRoutines
@@ -125,21 +142,6 @@ export default async function Page({ params }: Props) {
           <ClientProgressPhotos userProgressId={client.progress?.id ?? null} />
         </TabsContent>
       </Tabs>
-
-      {client.progress ? (
-        <ClientProgressHistory
-          userProgressId={client.progress.id}
-          initialDataClientProgressHistory={clientProgressHistory}
-          totalClientProgressHistory={totalClientProgressHistory}
-        />
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>Historial de medidas</CardTitle>
-            <CardDescription>No hay registros aún.</CardDescription>
-          </CardHeader>
-        </Card>
-      )}
     </div>
   );
 }
