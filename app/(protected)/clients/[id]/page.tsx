@@ -153,6 +153,7 @@ export default async function Page({ params }: Props) {
           <ClientRoutines
             userProgressId={client.progress?.id ?? null}
             clientName={client.name}
+            hasRoutineHistory={!!totalClientRoutineHistory}
           />
 
           <div className="mt-5">

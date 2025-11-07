@@ -13,11 +13,13 @@ import { Role } from "@/app/generated/prisma";
 type Props = {
   userProgressId: number | null;
   clientName: string;
+  hasRoutineHistory: boolean;
 };
 
 export default async function ClientRoutines({
   userProgressId,
   clientName,
+  hasRoutineHistory,
 }: Props) {
   const session = await auth();
   if (!session) return null;
@@ -58,7 +60,7 @@ export default async function ClientRoutines({
               <div className="flex flex-col justify-center items-center gap-3">
                 <Dumbbell className="h-20 w-20 text-gray-300" />
                 <p className="text-gray-700 text-lg">
-                  No hay rutinas asignadas aún
+                  {!hasRoutineHistory && "No hay rutinas asignadas aún"}
                 </p>
                 <ClientRoutinesForm
                   clientName={clientName}
