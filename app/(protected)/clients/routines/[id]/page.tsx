@@ -1,4 +1,5 @@
 import RoutineDetails from "@/features/clients/client/components/RoutineDetails";
+import RoutineDetailsCard from "@/features/clients/client/components/RoutineDetailsCard";
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
 import RedirectBack from "@/shared/components/nav/RedirectBack";
@@ -31,6 +32,22 @@ export default async function Page({ params }: Props) {
           <RedirectBack />
         </div>
       </div>
+
+      <RoutineDetailsCard
+        routine={{
+          id: routine.id,
+          userProgressId: routine.userProgressId,
+          trainerId: routine.trainerId,
+          name: routine.name,
+          description: routine.description,
+          goal: routine.goal,
+          startDate: routine.startDate,
+          endDate: routine.endDate,
+          durationWeek: routine.durationWeek,
+          createdAt: routine.createdAt,
+          updatedAt: routine.updatedAt,
+        }}
+      />
 
       <RoutineDetails routine={routine} />
     </div>
