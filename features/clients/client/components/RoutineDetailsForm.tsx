@@ -119,8 +119,8 @@ export function ClientRoutineDetailForm({ routineId, setExercises }: Props) {
               register={register}
               errors={errors}
               name="name"
-              label="Nombre de la rutina"
-              placeholder="Ej: Hipertrofia tren superior"
+              label="Nombre del ejercicio"
+              placeholder="Ej: Press de banca"
             />
 
             {/* muscle */}
@@ -152,7 +152,7 @@ export function ClientRoutineDetailForm({ routineId, setExercises }: Props) {
                   errors={errors}
                   name="reps"
                   label="Repeticiones"
-                  placeholder="Ej: 8-10 repeticiones o 1 minuto"
+                  placeholder="Ej: 8-10 reps o 1 minuto"
                 />
               </div>
             </div>
