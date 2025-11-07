@@ -1,6 +1,6 @@
 "use server";
 import z from "zod";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { InitialState, status } from "@/shared/interfaces/initialStateAction";
 
 import prisma from "@/lib/prisma";
