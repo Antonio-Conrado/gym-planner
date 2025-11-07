@@ -1,5 +1,5 @@
 "use client";
-import { Routine } from "@/app/generated/prisma";
+import { Role, Routine } from "@/app/generated/prisma";
 import {
   Card,
   CardContent,
@@ -29,8 +29,9 @@ type Props = {
   routine: Routine & {
     RoutineExercise: RoutineExercise[];
   };
+  role: string | undefined;
 };
-export default function RoutineDetails({ routine }: Props) {
+export default function RoutineDetails({ routine, role }: Props) {
   const [exercises, setExercises] = useState<ExerciseWithMeta[]>(
     routine.RoutineExercise || []
   );
@@ -102,33 +103,43 @@ export default function RoutineDetails({ routine }: Props) {
               {exercises.length > 1 ? "ejercicios" : "ejercicio"} en la rutina
             </CardDescription>
           </div>
-          <ClientRoutineDetailForm
-            routineId={routine.id}
-            setExercises={setExercises}
-          />
+          {role && role === Role.TRAINER && (
+            <ClientRoutineDetailForm
+              routineId={routine.id}
+              setExercises={setExercises}
+            />
+          )}
         </div>
-        {exercises.some((exercise) => exercise.isNew) && (
-          <div className="flex flex-col gap-3">
-            <Alert className="bg-orange-50 mt-2">
-              <AlertDescription className="text-orange-800 flex items-center gap-4">
-                <CircleAlert />
-                {`Tienes cambios sin guardar en esta rutina. No olvides presionar "Guardar Cambios" para aplicarlos.`}
-              </AlertDescription>
-            </Alert>
-            <div className="flex flex-col md:flex-row gap-3">
-              <Button className="w-40" variant="outline" onClick={handleCancel}>
-                Descartar Cambios
-              </Button>
-              <Button
-                className="w-40"
-                onClick={handleSubmit}
-                disabled={isPending}
-              >
-                <Save />
-                Guardar Cambios
-              </Button>
-            </div>
-          </div>
+        {role && role === Role.TRAINER && (
+          <>
+            {exercises.some((exercise) => exercise.isNew) && (
+              <div className="flex flex-col gap-3">
+                <Alert className="bg-orange-50 mt-2">
+                  <AlertDescription className="text-orange-800 flex items-center gap-4">
+                    <CircleAlert />
+                    {`Tienes cambios sin guardar en esta rutina. No olvides presionar "Guardar Cambios" para aplicarlos.`}
+                  </AlertDescription>
+                </Alert>
+                <div className="flex flex-col md:flex-row gap-3">
+                  <Button
+                    className="w-40"
+                    variant="outline"
+                    onClick={handleCancel}
+                  >
+                    Descartar Cambios
+                  </Button>
+                  <Button
+                    className="w-40"
+                    onClick={handleSubmit}
+                    disabled={isPending}
+                  >
+                    <Save />
+                    Guardar Cambios
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </CardHeader>
 
@@ -177,37 +188,41 @@ export default function RoutineDetails({ routine }: Props) {
                         </p>
                       </div>
 
-                      <div className="flex gap-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="hover:bg-cyan-50"
-                                aria-label="Editar ejercicio"
-                              >
-                                <Edit className="text-cyan-700" size={18} />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top">Editar</TooltipContent>
-                          </Tooltip>
+                      {role && role === Role.TRAINER && (
+                        <div className="flex gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="hover:bg-cyan-50"
+                                  aria-label="Editar ejercicio"
+                                >
+                                  <Edit className="text-cyan-700" size={18} />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">Editar</TooltipContent>
+                            </Tooltip>
 
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="hover:bg-red-50"
-                                aria-label="Eliminar ejercicio"
-                              >
-                                <Trash className="text-red-700" size={18} />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top">Eliminar</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="hover:bg-red-50"
+                                  aria-label="Eliminar ejercicio"
+                                >
+                                  <Trash className="text-red-700" size={18} />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">
+                                Eliminar
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      )}
                     </div>
                   </CardHeader>
 

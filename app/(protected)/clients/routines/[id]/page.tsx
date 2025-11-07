@@ -1,5 +1,6 @@
 import RoutineDetails from "@/features/clients/client/components/RoutineDetails";
 import RoutineDetailsCard from "@/features/clients/client/components/RoutineDetailsCard";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
 import RedirectBack from "@/shared/components/nav/RedirectBack";
@@ -9,6 +10,7 @@ type Props = {
 };
 export default async function Page({ params }: Props) {
   const param = await params;
+  const session = await auth();
   const id = Number(param.id);
 
   const routine = await prisma.routine.findUnique({
@@ -16,7 +18,7 @@ export default async function Page({ params }: Props) {
     include: { RoutineExercise: true },
   });
 
-  if (isNaN(id) || !id || !routine)
+  if (isNaN(id) || !id || !routine || !session)
     return (
       <ErrorAlert
         title="Cliente no encontrado"
@@ -49,7 +51,7 @@ export default async function Page({ params }: Props) {
         }}
       />
 
-      <RoutineDetails routine={routine} />
+      <RoutineDetails routine={routine} role={session.user.role} />
     </div>
   );
 }

@@ -88,26 +88,27 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="py-6 md:py-14 px-6 min-h-[80vh] flex flex-col gap-5">
-      <div className="block md:relative md:bottom-12 mb-4 md:mb-0 w-52 ">
-        <div className="md:fixed md:z-10">
-          <div
-            className="flex items-center gap-2 
+      {client.role === Role.TRAINER && (
+        <div className="block md:relative md:bottom-12 mb-4 md:mb-0 w-52 ">
+          <div className="md:fixed md:z-10">
+            <div
+              className="flex items-center gap-2 
                   p-2 rounded-md 
                   bg-white/70 hover:bg-gray-200 backdrop-blur-sm 
                   md:bg-transparent md:backdrop-blur-0
                   shadow-sm md:shadow-none"
-          >
-            <MoveLeft className="w-4" />
-            <Link
-              href={"/clients"}
-              className="font-semibold text-gray-700 text-sm"
             >
-              Volver a clientes
-            </Link>
+              <MoveLeft className="w-4" />
+              <Link
+                href={"/clients"}
+                className="font-semibold text-gray-700 text-sm"
+              >
+                Volver a clientes
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-
+      )}
       <ClientInfoCard
         name={client.name}
         photo={client.photo}
@@ -150,11 +151,13 @@ export default async function Page({ params }: Props) {
           </div>
         </TabsContent>
         <TabsContent value="routines">
-          <ClientRoutines
-            userProgressId={client.progress?.id ?? null}
-            clientName={client.name}
-            hasRoutineHistory={!!totalClientRoutineHistory}
-          />
+          {client.role === Role.TRAINER && (
+            <ClientRoutines
+              userProgressId={client.progress?.id ?? null}
+              clientName={client.name}
+              hasRoutineHistory={!!totalClientRoutineHistory}
+            />
+          )}
 
           <div className="mt-5">
             {client.progress ? (
