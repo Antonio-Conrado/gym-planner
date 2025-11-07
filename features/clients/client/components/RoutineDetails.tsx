@@ -98,7 +98,8 @@ export default function RoutineDetails({ routine }: Props) {
           <div>
             <CardTitle>Ejercicios por Día</CardTitle>
             <CardDescription>
-              {routine.RoutineExercise.length} ejercicios en la rutina
+              {exercises.length}{" "}
+              {exercises.length > 1 ? "ejercicios" : "ejercicio"} en la rutina
             </CardDescription>
           </div>
           <ClientRoutineDetailForm
