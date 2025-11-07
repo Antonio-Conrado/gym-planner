@@ -66,18 +66,13 @@ export const navGroups: NavGroups[] = [
 
 export const clientLinks = (userId: number): link[] => [
   {
-    name: "Rutinas",
-    href: `/clients/${userId}/routines`,
+    name: "Mi entrenamiento",
+    href: `/clients/${userId}`,
     roles: [Role.CLIENT],
   },
   {
     name: "Historial de pagos",
     href: `/clients/${userId}/payments`,
-    roles: [Role.CLIENT],
-  },
-  {
-    name: "Mi progreso",
-    href: `/clients/${userId}/progress`,
     roles: [Role.CLIENT],
   },
 ];
