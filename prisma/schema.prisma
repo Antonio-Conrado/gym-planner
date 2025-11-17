@@ -319,19 +319,27 @@ model ProgressPhoto {
 // PAYMENTS
 // =======================
 
+model PaymentConcept {
+  id      Int       @id @default(autoincrement())
+  amount  Float
+  concept Concept
+  payment Payment[]
+}
+
 model Payment {
-  id        Int           @id @default(autoincrement())
-  userId    Int
-  user      User          @relation(fields: [userId], references: [id])
-  amount    Float
-  method    PaymentMethod
-  concept   Concept
-  startDate DateTime
-  endDate   DateTime
-  status    StatusList    @default(COMPLETED)
-  paidAt    DateTime      @default(now())
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @default(now()) @updatedAt
+  id               Int            @id @default(autoincrement())
+  userId           Int
+  user             User           @relation(fields: [userId], references: [id])
+  paymentConceptId Int
+  paymentConcept   PaymentConcept @relation(fields: [paymentConceptId], references: [id])
+  method           PaymentMethod
+  reference        String?
+  startDate        DateTime
+  endDate          DateTime
+  status           StatusList     @default(COMPLETED)
+  paidAt           DateTime       @default(now())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
 
   @@index([userId, startDate, endDate, status])
   @@index([paidAt])
