@@ -44,10 +44,14 @@ export const navGroups: NavGroups[] = [
       },
 
       //admin
-      { name: "Registrar pago", href: "/admin/payments", roles: [Role.ADMIN] },
+      {
+        name: "Registrar pago",
+        href: "/admin/register-payment",
+        roles: [Role.ADMIN],
+      },
       {
         name: "Historial de pagos",
-        href: "/admin/payments/history",
+        href: "/admin/history-payments",
         roles: [Role.ADMIN],
       },
       { name: "Planes", href: "/admin/plans", roles: [Role.ADMIN] },
