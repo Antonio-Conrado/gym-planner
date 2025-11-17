@@ -584,13 +584,28 @@ async function main() {
   // ================================
   // PAYMENTS
   // ================================
+
+  const monthConcept = await prisma.paymentConcept.create({
+    data: {
+      amount: 900,
+      concept: "MONTH",
+    },
+  });
+
+  const fortnightConcept = await prisma.paymentConcept.create({
+    data: {
+      amount: 500,
+      concept: "FORTNIGHT",
+    },
+  });
+
   await prisma.payment.createMany({
     data: [
       {
         userId: clientWithTrainer.id,
-        amount: 60,
-        method: "CARD",
-        concept: "MONTH",
+        paymentConceptId: monthConcept.id,
+        method: "TRANSFER",
+        reference: "TRX-20251113-001",
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
         status: "COMPLETED",
@@ -598,9 +613,8 @@ async function main() {
       },
       {
         userId: clientFree.id,
-        amount: 50,
+        paymentConceptId: fortnightConcept.id,
         method: "CASH",
-        concept: "MONTH",
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
         status: "COMPLETED",
