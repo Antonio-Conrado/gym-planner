@@ -1,27 +1,63 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const protectedRoutes = ["/dashboard", "/profile"];
+// const protectedRoutes = ["/dashboard", "/profile", "/admin"];
+const protectedRoutes: Record<string, string[]> = {
+  ADMIN: ["/admin"],
+  TRAINER: ["/clients"],
+  CLIENT: ["/clients"],
+  all: ["/profile"],
+};
 const publicRoutes = ["/login", "/register"];
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  // Check if the current route is protected or public
-  const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
   // Get the JWT token from the session cookie
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+
+  // Flatten all protected routes to check if current path is protected
+  const allProtectedRoutes = Object.values(protectedRoutes).flat();
+  const isProtectedRoute = allProtectedRoutes.some((route) =>
+    path.startsWith(route)
+  );
+
+  // If the route is public and there is a token → redirect to profile
+  if (isPublicRoute && token) {
+    return NextResponse.redirect(new URL("/profile", req.nextUrl));
+  }
 
   // If the route is protected and there is no token → redirect to login
   if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // If the route is public and there is a token → redirect to profile
-  if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+  // If the route is protected and there is no token → redirect to login
+  if (isProtectedRoute && token && token.role) {
+    // Check if the user's role allows access to this route
+    const hasRoleAccess = protectedRoutes[token.role].some((route) =>
+      path.startsWith(route)
+    );
+
+    // Check if route is in the 'all' group (accessible by any role)
+    const isAllRoute = protectedRoutes["all"].some((route) =>
+      path.startsWith(route)
+    );
+
+    // If route is in 'all' → allow
+    if (isAllRoute) {
+      return NextResponse.next();
+    }
+
+    // If user's role allows → allow
+    if (hasRoleAccess) {
+      return NextResponse.next();
+    }
+
+    // If user's role does not allow → redirect to 'no permissions' page
+    return NextResponse.redirect(new URL("/access-denied", req.nextUrl));
   }
 
   // If everything is okay, continue to the requested page
