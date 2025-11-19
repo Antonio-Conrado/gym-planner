@@ -1,4 +1,4 @@
-import { DaysOfWeek, PrismaClient } from "../app/generated/prisma";
+import { Concept, DaysOfWeek, PrismaClient } from "../app/generated/prisma";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -585,25 +585,87 @@ async function main() {
   // PAYMENTS
   // ================================
 
-  const monthConcept = await prisma.paymentConcept.create({
-    data: {
-      amount: 900,
-      concept: "MONTH",
-    },
-  });
+  const baseFeatures = [
+    "Acceso al gimnasio",
+    "Zona de pesas y cardio",
+    "Vestuarios y duchas",
+    "Entrenador personal disponible (opcional)",
+  ];
 
-  const fortnightConcept = await prisma.paymentConcept.create({
-    data: {
+  const concepts = [
+    {
+      concept: Concept.DAY,
+      amount: 50,
+      description: "Pase diario",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.WEEK,
+      amount: 300,
+      description: "Entrena toda la semana sin límites",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.FORTNIGHT,
       amount: 500,
-      concept: "FORTNIGHT",
+      description: "Entrena 15 días a tu ritmo",
+      includedServices: baseFeatures,
     },
+    {
+      concept: Concept.MONTH,
+      amount: 900,
+      description: "La opción más conveniente para ti",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.QUARTER,
+      amount: 2400,
+      description: "Membresía trimestral",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.SEMESTER,
+      amount: 4800,
+      description: "Membresía semestral",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.YEAR,
+      amount: 9600,
+      description: "Membresía anual",
+      includedServices: baseFeatures,
+    },
+    {
+      concept: Concept.OTHER,
+      amount: 0,
+      description: "Pago adicional o personalizado",
+      includedServices: ["Servicio personalizado"],
+    },
+  ];
+
+  for (const item of concepts) {
+    await prisma.paymentConcept.create({
+      data: {
+        amount: item.amount,
+        concept: item.concept,
+        description: item.description,
+        includedServices: item.includedServices,
+      },
+    });
+  }
+
+  const monthConcept = await prisma.paymentConcept.findFirst({
+    where: { concept: Concept.MONTH },
   });
 
+  const fortnightConcept = await prisma.paymentConcept.findFirst({
+    where: { concept: Concept.FORTNIGHT },
+  });
   await prisma.payment.createMany({
     data: [
       {
         userId: clientWithTrainer.id,
-        paymentConceptId: monthConcept.id,
+        paymentConceptId: monthConcept!.id,
         method: "TRANSFER",
         reference: "TRX-20251113-001",
         startDate: new Date(),
@@ -613,7 +675,7 @@ async function main() {
       },
       {
         userId: clientFree.id,
-        paymentConceptId: fortnightConcept.id,
+        paymentConceptId: fortnightConcept!.id,
         method: "CASH",
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
