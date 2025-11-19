@@ -127,7 +127,7 @@ export default function RegisterPaymentForm({ paymentConcepts }: Props) {
               <FormError message={state?.errors.method} />
             </div>
 
-            {selectedMethod !== PaymentMethod.CASH && (
+            {selectedMethod !== "" && selectedMethod !== PaymentMethod.CASH && (
               <div className="grid gap-3">
                 <Label>Referencia de pago</Label>
                 <Input

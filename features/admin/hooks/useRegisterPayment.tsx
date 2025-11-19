@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { calculateEndDate } from "@/lib/helpers/calculateEndDate";
 import { InitialClient } from "../components/SearchUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function useRegisterPayment() {
   // local state
@@ -27,6 +28,7 @@ export default function useRegisterPayment() {
     null
   );
 
+  const queryClient = useQueryClient();
   //form action state
   const registerPaymentWithConcept = registerPaymentAction.bind(
     null,
@@ -51,10 +53,11 @@ export default function useRegisterPayment() {
   useEffect(() => {
     if (state.status === status.COMPLETED) {
       toast.success(state.message);
+      queryClient.invalidateQueries({ queryKey: ["paymentHistory"] });
       resetForm();
     }
     if (state.status === status.ERROR) toast.error(state.message);
-  }, [state]);
+  }, [state, queryClient]);
 
   //compute change amount dynamically
   const changeAmount = useMemo(() => {
