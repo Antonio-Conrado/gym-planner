@@ -5,6 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // =======================
@@ -319,10 +320,12 @@ model ProgressPhoto {
 // =======================
 
 model PaymentConcept {
-  id      Int       @id @default(autoincrement())
-  amount  Float
-  concept Concept
-  payment Payment[]
+  id               Int       @id @default(autoincrement())
+  amount           Float
+  concept          Concept
+  description      String
+  includedServices String[]
+  payment          Payment[]
 }
 
 model Payment {
