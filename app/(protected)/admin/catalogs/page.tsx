@@ -1,4 +1,5 @@
 import PaymentConcepts from "@/features/admin/components/PaymentConcepts";
+import Trainers from "@/features/admin/components/Trainers";
 import prisma from "@/lib/prisma";
 
 async function fetchTrainersAndPaymentConcept() {
@@ -9,6 +10,7 @@ async function fetchTrainersAndPaymentConcept() {
           user: {
             select: {
               name: true,
+              slug: true,
               email: true,
               telephone: true,
             },
@@ -40,6 +42,7 @@ export default async function Page() {
 
   return (
     <div className="p-6 flex flex-col gap-6">
+      <Trainers trainers={trainers} />
       <PaymentConcepts paymentConcepts={paymentConcept} />
     </div>
   );
