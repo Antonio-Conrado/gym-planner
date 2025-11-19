@@ -54,9 +54,9 @@ export const navGroups: NavGroups[] = [
         href: "/admin/history-payments",
         roles: [Role.ADMIN],
       },
-      { name: "Planes", href: "/admin/plans", roles: [Role.ADMIN] },
+      // { name: "Planes", href: "/admin/plans", roles: [Role.ADMIN] },
       { name: "Clientes", href: "/admin/clients", roles: [Role.ADMIN] },
-      { name: "Entrenadores", href: "/admin/trainers", roles: [Role.ADMIN] },
+      { name: "Catálogos", href: "/admin/catalogs", roles: [Role.ADMIN] },
 
       //trainer
       {
