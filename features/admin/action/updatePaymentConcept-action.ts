@@ -15,9 +15,12 @@ export async function updatePaymentConceptAction(
   initialState: InitialState<paymentConceptErrors>,
   formData: FormData
 ): Promise<InitialState<paymentConceptErrors>> {
-  const amount = Number(formData.get("amount"));
+  const validateFields = paymentConceptSchema.safeParse({
+    amount: Number(formData.get("amount")),
+    description: formData.get("description"),
+    includedServices: formData.getAll("includedServices"),
+  });
 
-  const validateFields = paymentConceptSchema.safeParse({ amount });
   if (!validateFields.success) {
     const errors = z.flattenError(validateFields.error);
     return {
@@ -28,10 +31,13 @@ export async function updatePaymentConceptAction(
   }
 
   try {
+    const { amount, description, includedServices } = validateFields.data;
     await prisma.paymentConcept.update({
       where: { id },
       data: {
         amount,
+        description,
+        includedServices,
       },
     });
 

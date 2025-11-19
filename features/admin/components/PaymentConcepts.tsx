@@ -39,9 +39,11 @@ export default function PaymentConcepts({ paymentConcepts }: Props) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Concepto</TableHead>
-                <TableHead>Precio</TableHead>
-                <TableHead>Acciones</TableHead>
+                <TableHead className="text-center">Concepto</TableHead>
+                <TableHead className="text-center">Descripción</TableHead>
+                <TableHead className="text-center">Precio</TableHead>
+                <TableHead className="text-center">Beneficios</TableHead>
+                <TableHead className="text-center">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             {paymentConcepts.length > 0 ? (
@@ -50,8 +52,24 @@ export default function PaymentConcepts({ paymentConcepts }: Props) {
                   <TableRow key={paymentConcept.id}>
                     {/* concept */}
                     <TableCell>{CONCEPT[paymentConcept.concept]}</TableCell>
+                    {/* description */}
+                    <TableCell>
+                      {paymentConcept.description.length > 35
+                        ? paymentConcept.description.slice(0, 35) + "..."
+                        : paymentConcept.description}
+                    </TableCell>
                     {/* price */}
                     <TableCell>C$ {paymentConcept.amount}</TableCell>
+                    {/* included services */}
+                    <TableCell>
+                      {paymentConcept.includedServices.map((service, index) => (
+                        <div key={index} className="mb-1">
+                          <span className="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded">
+                            {service}
+                          </span>
+                        </div>
+                      ))}
+                    </TableCell>
                     {/*actions */}
                     <TableCell>
                       <PaymentConceptForm defaultValue={paymentConcept} />
