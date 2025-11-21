@@ -66,3 +66,15 @@ export const NOTIFICATION_COLORS: Record<
   TRAINER_MESSAGE: "bg-purple-600",
   GENERAL: "bg-gray-500",
 };
+
+export const defaultColors = [
+  "#ff6b35",
+  "#ffc107",
+  "#4dd0e1",
+  "#ff8a65",
+  "#81c784",
+  "#ff7043",
+  "#64b5f6",
+  "#ffd54f",
+  "#ffab91",
+];
