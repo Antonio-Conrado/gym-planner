@@ -13,6 +13,10 @@ import { Star } from "lucide-react";
 
 export default async function Page() {
   const trainers = await prisma.trainer.findMany({
+    where: {
+      status: true,
+      deletedAt: null,
+    },
     include: {
       speciality: true,
       user: {
