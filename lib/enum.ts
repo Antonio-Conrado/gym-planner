@@ -49,3 +49,18 @@ export enum NOTIFICATION_TYPE {
   TRAINER_MESSAGE = "Mensaje del entrenador",
   GENERAL = "General",
 }
+
+export enum MONTHS {
+  JANUARY = "Enero",
+  FEBRUARY = "Febrero",
+  MARCH = "Marzo",
+  APRIL = "Abril",
+  MAY = "Mayo",
+  JUNE = "Junio",
+  JULY = "Julio",
+  AUGUST = "Agosto",
+  SEPTEMBER = "Septiembre",
+  OCTOBER = "Octubre",
+  NOVEMBER = "Noviembre",
+  DECEMBER = "Diciembre",
+}
