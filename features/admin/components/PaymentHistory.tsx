@@ -132,7 +132,7 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
 
                   {/* amount*/}
                   <TableCell className="text-center">
-                    C$ {payment.paymentConcept.amount.toFixed(2)}
+                    C$ {payment.price.toFixed(2)}
                   </TableCell>
 
                   {/* paid Date*/}

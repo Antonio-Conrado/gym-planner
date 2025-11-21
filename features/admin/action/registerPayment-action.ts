@@ -17,6 +17,7 @@ import { calculateEndDate } from "@/lib/helpers/calculateEndDate";
 
 export default async function registerPaymentAction(
   paymentConcept: string | undefined,
+  paymentConceptAmount: number | undefined,
   initialState: InitialState<registerPaymentErrors, registerPayment>,
   formData: FormData
 ): Promise<InitialState<registerPaymentErrors, registerPayment>> {
@@ -48,6 +49,10 @@ export default async function registerPaymentAction(
   try {
     const { userId, paymentConceptId, method, reference } = validateFields.data;
 
+    if (!paymentConcept || !paymentConceptAmount) {
+      throw new Error("Debes seleccionar un concepto de pago.");
+    }
+
     const endDate = calculateEndDate(
       validateFields.data.startDate,
       paymentConcept as Concept
@@ -71,6 +76,7 @@ export default async function registerPaymentAction(
         data: {
           userId,
           paymentConceptId,
+          price: paymentConceptAmount,
           method,
           reference,
           paidAt: new Date(),

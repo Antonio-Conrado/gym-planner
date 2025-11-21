@@ -32,7 +32,8 @@ export default function useRegisterPayment() {
   //form action state
   const registerPaymentWithConcept = registerPaymentAction.bind(
     null,
-    selectedPaymentConcept?.concept
+    selectedPaymentConcept?.concept,
+    selectedPaymentConcept?.amount
   );
 
   // useActionState handles the form action, loading status, and errors

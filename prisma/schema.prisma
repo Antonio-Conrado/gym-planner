@@ -335,6 +335,7 @@ model Payment {
   paymentConceptId Int
   paymentConcept   PaymentConcept @relation(fields: [paymentConceptId], references: [id])
   method           PaymentMethod
+  price            Float
   reference        String?
   startDate        DateTime
   endDate          DateTime
