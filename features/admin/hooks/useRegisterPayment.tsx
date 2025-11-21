@@ -55,6 +55,7 @@ export default function useRegisterPayment() {
     if (state.status === status.COMPLETED) {
       toast.success(state.message);
       queryClient.invalidateQueries({ queryKey: ["paymentHistory"] });
+      queryClient.invalidateQueries({ queryKey: ["barChartIncome"] });
       resetForm();
     }
     if (state.status === status.ERROR) toast.error(state.message);
