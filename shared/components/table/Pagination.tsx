@@ -16,8 +16,8 @@ export default function Pagination({
   rowsOnPage,
 }: Props) {
   const totalPages = Math.ceil(total / rowsPerPage);
-  const start = total && total > 0 ? (page - 1) * rowsPerPage + 1 : 0;
-  const end = (page - 1) * rowsPerPage + rowsOnPage;
+  const start = rowsOnPage > 0 ? (page - 1) * rowsPerPage + 1 : 0;
+  const end = rowsOnPage > 0 ? (page - 1) * rowsPerPage + rowsOnPage : 0;
 
   return (
     <div className="flex flex-col md:flex-row gap-3 items-center justify-end space-x-2">
