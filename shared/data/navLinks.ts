@@ -91,7 +91,7 @@ export const generalLinks = (userId: number, role: Role): link[] => {
     {
       name: "Notificaciones",
       href: notificationsHref,
-      roles: [Role.TRAINER, Role.ADMIN, Role.CLIENT],
+      roles: [Role.TRAINER, Role.CLIENT],
     },
   ];
 };
