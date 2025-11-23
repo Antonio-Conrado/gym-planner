@@ -1,3 +1,13 @@
+import {
+  Calendar,
+  DollarSign,
+  UserPlus,
+  Users,
+  MessageSquare,
+  Bell,
+  CheckCircle,
+} from "lucide-react";
+
 export enum ROLE_ENUM {
   CLIENT = "Cliente",
   TRAINER = "Entrenador",
@@ -49,6 +59,18 @@ export enum NOTIFICATION_TYPE {
   TRAINER_MESSAGE = "Mensaje del entrenador",
   GENERAL = "General",
 }
+export const NOTIFICATION_ICONS: Record<
+  keyof typeof NOTIFICATION_TYPE,
+  React.ElementType
+> = {
+  RESERVATION: Calendar,
+  PAYMENT: DollarSign,
+  PLAN_UPDATE: CheckCircle,
+  TRAINING_REQUEST: UserPlus,
+  CLIENT_TRAINING: Users,
+  TRAINER_MESSAGE: MessageSquare,
+  GENERAL: Bell,
+};
 
 export enum MONTHS {
   JANUARY = "Enero",
