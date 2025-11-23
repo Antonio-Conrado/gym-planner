@@ -67,6 +67,19 @@ export const NOTIFICATION_COLORS: Record<
   GENERAL: "bg-gray-500",
 };
 
+export const NOTIFICATION_COLORS_ICON: Record<
+  keyof typeof NOTIFICATION_TYPE,
+  string
+> = {
+  RESERVATION: "text-blue-500",
+  PAYMENT: "text-green-600",
+  PLAN_UPDATE: "text-yellow-600",
+  TRAINING_REQUEST: "text-orange-600",
+  CLIENT_TRAINING: "text-cyan-600",
+  TRAINER_MESSAGE: "text-purple-600",
+  GENERAL: "text-gray-500",
+};
+
 export const defaultColors = [
   "#ff6b35",
   "#ffc107",
