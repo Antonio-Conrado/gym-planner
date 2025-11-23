@@ -90,7 +90,7 @@ export default function AdminClients() {
                 </TableCell>
               </TableRow>
             </TableBody>
-          ) : data ? (
+          ) : data && data.clients ? (
             <TableBody>
               {data.clients.map((client) => (
                 <TableRow key={client.id} className="hover:bg-gray-50">
@@ -164,7 +164,7 @@ export default function AdminClients() {
         </Table>
       </div>
 
-      {data && (
+      {data && data.clients && (
         <Pagination
           total={
             debouncedSearch ? data.filteredClientsCount : data.clientsTotal

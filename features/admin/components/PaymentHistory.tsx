@@ -103,7 +103,7 @@ export default function PaymentHistory() {
                 </TableCell>
               </TableRow>
             </TableBody>
-          ) : data ? (
+          ) : data && data.payments ? (
             <TableBody>
               {data.payments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
@@ -166,7 +166,7 @@ export default function PaymentHistory() {
         </Table>
       </div>
 
-      {data && (
+      {data && data.payments && (
         <Pagination
           total={
             debouncedSearch ? data.filteredPaymentsCount : data.paymentsTotal
