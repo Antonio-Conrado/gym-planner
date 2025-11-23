@@ -32,9 +32,9 @@ export async function fetchTrainerDashboardData(trainerId: number) {
     };
   } catch {
     return {
-      totalClients: undefined,
-      activeClients: undefined,
-      totalRoutines: undefined,
+      totalClients: 0,
+      activeClients: 0,
+      totalRoutines: 0,
     };
   }
 }

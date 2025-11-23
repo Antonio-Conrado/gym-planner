@@ -13,7 +13,7 @@ import {
 } from "@/shared/components/ui/table";
 import { Input } from "@/shared/components/ui/input";
 import Pagination from "@/shared/components/table/Pagination";
-import { ClientTrainerPlanData } from "../interfaces/client";
+import { ClientQueryResponse } from "../interfaces/client";
 import { Spinner } from "@/shared/components/ui/spinner";
 import Link from "next/link";
 import { DAYS_OF_WEEK } from "@/lib/enum";
@@ -23,18 +23,13 @@ import { getMonthYear } from "@/lib/helpers/formatDate";
 import { Mail, Phone } from "lucide-react";
 
 type Props = {
-  initialClients: ClientTrainerPlanData[];
   totalClients: number;
   trainerId: number;
 };
 
 const ROWS_PER_PAGE = 10;
 
-export default function ClientList({
-  initialClients,
-  totalClients,
-  trainerId,
-}: Props) {
+export default function ClientList({ trainerId, totalClients }: Props) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   // Debounce search input
@@ -42,7 +37,7 @@ export default function ClientList({
 
   const skip = (page - 1) * ROWS_PER_PAGE;
   // Fetch clients
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<ClientQueryResponse>({
     queryKey: ["trainerClients", trainerId, page, debouncedSearch],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -55,14 +50,14 @@ export default function ClientList({
       const response = await fetch(
         `/api/trainers/clients?${params.toString()}`
       );
-      if (!response.ok) throw new Error("Error fetching clients");
-      return response.json();
+      if (!response.ok) throw new Error("Error al obtener clientes");
+
+      const data = await response.json();
+      return data;
     },
-    placeholderData: { clients: initialClients },
+    placeholderData: (prevData) => prevData,
     staleTime: 1000 * 60 * 5,
   });
-
-  const clients: ClientTrainerPlanData[] = data?.clients ?? [];
 
   return (
     <div className="shadow-xl rounded-xl py-10 px-6 flex flex-col gap-6 mt-8 border border-gray-200">
@@ -72,7 +67,10 @@ export default function ClientList({
         <Input
           placeholder="Buscar por nombre o correo electrónico"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
           className="max-w-sm"
         />
       </div>
@@ -101,9 +99,9 @@ export default function ClientList({
                 </TableCell>
               </TableRow>
             </TableBody>
-          ) : clients.length > 0 ? (
+          ) : data ? (
             <TableBody>
-              {clients.map((client) => (
+              {data.clients.map((client) => (
                 <TableRow key={client.id} className="hover:bg-gray-50">
                   {/* Photo */}
                   <TableCell className="text-center">
@@ -179,13 +177,15 @@ export default function ClientList({
         </Table>
       </div>
 
-      <Pagination
-        total={totalClients}
-        page={page}
-        rowsPerPage={ROWS_PER_PAGE}
-        onPageChange={setPage}
-        rowsOnPage={clients.length}
-      />
+      {data && (
+        <Pagination
+          total={debouncedSearch ? data.totalClients : totalClients}
+          page={page}
+          rowsPerPage={ROWS_PER_PAGE}
+          onPageChange={setPage}
+          rowsOnPage={data.clients.length}
+        />
+      )}
     </div>
   );
 }

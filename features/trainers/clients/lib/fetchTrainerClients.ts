@@ -6,31 +6,55 @@ export async function fetchTrainerClients(
   take = 10,
   search?: string
 ) {
-  const clients = await prisma.clientTrainerPlan.findMany({
-    where: {
-      trainerId,
-      ...(search
-        ? {
-            OR: [
-              { client: { name: { contains: search, mode: "insensitive" } } },
-              { client: { email: { contains: search, mode: "insensitive" } } },
-            ],
-          }
-        : {}),
-    },
-    include: {
-      client: {
-        select: {
-          name: true,
-          photo: true,
-          email: true,
-          telephone: true,
+  try {
+    const clients = await prisma.clientTrainerPlan.findMany({
+      where: {
+        trainerId,
+        ...(search
+          ? {
+              OR: [
+                { client: { name: { contains: search, mode: "insensitive" } } },
+                {
+                  client: { email: { contains: search, mode: "insensitive" } },
+                },
+              ],
+            }
+          : {}),
+      },
+      include: {
+        client: {
+          select: {
+            name: true,
+            photo: true,
+            email: true,
+            telephone: true,
+          },
         },
       },
-    },
-    skip,
-    take,
-  });
+      skip,
+      take,
+    });
+    const totalClients = await prisma.clientTrainerPlan.count({
+      where: {
+        trainerId,
+        ...(search
+          ? {
+              OR: [
+                { client: { name: { contains: search, mode: "insensitive" } } },
+                {
+                  client: { email: { contains: search, mode: "insensitive" } },
+                },
+              ],
+            }
+          : {}),
+      },
+    });
 
-  return { clients };
+    return { clients, totalClients };
+  } catch {
+    return {
+      clients: [],
+      totalClients: 0,
+    };
+  }
 }

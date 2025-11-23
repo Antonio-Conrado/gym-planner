@@ -7,3 +7,8 @@ export type ClientTrainerPlanData = ClientTrainerPlan & {
     telephone: string | null;
   };
 };
+
+export type ClientQueryResponse = {
+  clients: ClientTrainerPlanData[];
+  totalClients: number;
+};

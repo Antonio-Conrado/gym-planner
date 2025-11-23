@@ -9,7 +9,6 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
-import { fetchTrainerClients } from "@/features/trainers/clients/lib/fetchTrainerClients";
 
 export default async function Page() {
   const trainer = await auth();
@@ -39,9 +38,6 @@ export default async function Page() {
   const { totalClients, activeClients, totalRoutines } =
     await fetchTrainerDashboardData(Number(trainer.user.id));
 
-  // Get the first 10 clients of the trainer
-  const { clients } = await fetchTrainerClients(Number(trainer.user.id));
-
   return (
     <div className="min-h-screen  p-6 ">
       <div className="mb-10">
@@ -59,18 +55,10 @@ export default async function Page() {
         totalRoutines={totalRoutines}
       />
 
-      {totalClients !== undefined ? (
-        <ClientList
-          initialClients={clients}
-          totalClients={totalClients}
-          trainerId={Number(trainer.user.id)}
-        />
-      ) : (
-        <p className="text-gray-700">
-          No se pudieron cargar los clientes en este momento. Por favor, intenta
-          nuevamente más tarde.
-        </p>
-      )}
+      <ClientList
+        trainerId={Number(trainer.user.id)}
+        totalClients={totalClients}
+      />
     </div>
   );
 }
