@@ -40,7 +40,9 @@ export default function TimePeriodBarChart({
   currentYear,
   colors = defaultColors,
 }: Props) {
-  const [selectedOption, setSelectedOption] = useState("Año");
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    "Año"
+  );
   const [selectedYear, setSelectedYear] = useState(String(currentYear));
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
     undefined
