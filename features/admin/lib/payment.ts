@@ -6,7 +6,7 @@ export async function fetchPaymentHistory(
   search?: string
 ) {
   try {
-    const [payments, paymentsTotal] = await Promise.all([
+    const [payments, filteredPaymentsCount, paymentsTotal] = await Promise.all([
       prisma.payment.findMany({
         where: {
           ...(search
@@ -36,14 +36,28 @@ export async function fetchPaymentHistory(
         take,
         skip,
       }),
+      prisma.payment.count({
+        where: {
+          ...(search
+            ? {
+                OR: [
+                  {
+                    user: { name: { contains: search, mode: "insensitive" } },
+                  },
+                ],
+              }
+            : {}),
+        },
+      }),
       prisma.payment.count(),
     ]);
 
     return {
       payments,
+      filteredPaymentsCount,
       paymentsTotal,
     };
   } catch {
-    return { payments: [], paymentsTotal: 0 };
+    return { payments: [], filteredPaymentsCount: 0, paymentsTotal: 0 };
   }
 }

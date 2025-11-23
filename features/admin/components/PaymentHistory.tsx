@@ -24,13 +24,14 @@ type payment = Payment & {
   paymentConcept: { concept: Concept; amount: number };
 };
 
-type Props = {
-  initialData: payment[];
+type paymentResponse = {
+  payments: payment[];
+  filteredPaymentsCount: number;
   paymentsTotal: number;
 };
 
 const ROWS_PER_PAGE = 10;
-export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
+export default function PaymentHistory() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   // Debounce search input
@@ -38,7 +39,7 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
 
   const skip = (page - 1) * ROWS_PER_PAGE;
   // Fetch payments
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<paymentResponse>({
     queryKey: ["paymentHistory", page, debouncedSearch],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -53,13 +54,12 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
       if (!response.ok)
         throw new Error("error al obtener el historial de pagos");
 
-      return response.json();
+      const payments = await response.json();
+      return payments;
     },
-    placeholderData: { payments: initialData },
+    placeholderData: (prevData) => prevData,
     staleTime: 1000 * 60 * 5,
   });
-
-  const payments: payment[] = data?.payments ?? [];
 
   return (
     <div className="shadow-xl rounded-xl py-10 px-6 flex flex-col gap-6 mt-8 border border-gray-200">
@@ -69,7 +69,10 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
         <Input
           placeholder="Buscar cliente"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
           className="max-w-sm"
         />
       </div>
@@ -100,9 +103,9 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
                 </TableCell>
               </TableRow>
             </TableBody>
-          ) : payments.length > 0 ? (
+          ) : data ? (
             <TableBody>
-              {payments.map((payment) => (
+              {data.payments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
                   {/* Name */}
                   <TableCell className="text-center">
@@ -163,13 +166,17 @@ export default function PaymentHistory({ initialData, paymentsTotal }: Props) {
         </Table>
       </div>
 
-      <Pagination
-        total={paymentsTotal}
-        page={page}
-        rowsPerPage={ROWS_PER_PAGE}
-        onPageChange={setPage}
-        rowsOnPage={payments.length}
-      />
+      {data && (
+        <Pagination
+          total={
+            debouncedSearch ? data.filteredPaymentsCount : data.paymentsTotal
+          }
+          page={page}
+          rowsPerPage={ROWS_PER_PAGE}
+          onPageChange={setPage}
+          rowsOnPage={data.payments.length}
+        />
+      )}
     </div>
   );
 }

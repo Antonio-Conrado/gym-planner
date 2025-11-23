@@ -1,5 +1,4 @@
 import PaymentHistory from "@/features/admin/components/PaymentHistory";
-import { fetchPaymentHistory } from "@/features/admin/lib/payment";
 import {
   Card,
   CardContent,
@@ -9,7 +8,6 @@ import {
 } from "@/shared/components/ui/card";
 
 export default async function Page() {
-  const { payments, paymentsTotal } = await fetchPaymentHistory();
   return (
     <div className="p-6">
       <Card>
@@ -22,17 +20,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent className="pb-10">
-          {payments && payments.length > 0 ? (
-            <PaymentHistory
-              initialData={payments}
-              paymentsTotal={paymentsTotal}
-            />
-          ) : (
-            <p className="text-gray-700">
-              No se pudo cargar el historial de pagos en este momento. Por
-              favor, intenta nuevamente más tarde.
-            </p>
-          )}
+          <PaymentHistory />
         </CardContent>
       </Card>
     </div>
