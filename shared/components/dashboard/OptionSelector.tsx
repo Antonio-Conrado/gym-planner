@@ -9,27 +9,36 @@ import {
 
 interface OptionSelectorProps {
   options: string[];
-  currentOption: string;
-  setSelectedOption: Dispatch<SetStateAction<string>>;
+  currentOption: string | undefined;
+  setSelectedOption: Dispatch<SetStateAction<string | undefined>>;
+  allowAll?: boolean;
+  label?: string;
+  placeholder?: string;
 }
 
 export function OptionSelector({
   options,
   currentOption,
   setSelectedOption,
+  allowAll,
+  label,
+  placeholder = "Seleccionar una opción",
 }: OptionSelectorProps) {
   return (
     <Select
       value={currentOption}
-      onValueChange={(value) => setSelectedOption(value)}
+      onValueChange={(value) =>
+        setSelectedOption(value === label ? undefined : value)
+      }
     >
       <SelectTrigger>
-        <SelectValue placeholder="Select an option" />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
+        {allowAll && <SelectItem value={label!}>-- {label} --</SelectItem>}
         {options.map((option) => (
           <SelectItem key={option} value={option}>
-            {option}
+            {option === "all" ? label : option}
           </SelectItem>
         ))}
       </SelectContent>
