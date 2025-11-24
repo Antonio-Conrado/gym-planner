@@ -18,6 +18,8 @@ import {
 } from "@/shared/components/ui/tabs";
 import { Role, Speciality, Trainer } from "@/app/generated/prisma";
 import TrainerForm from "@/features/user/profile/component/TrainerForm";
+import UploadPhotoForm from "@/shared/components/forms/UploadPhotoForm";
+import { uploadPhotoAction } from "@/features/user/profile/action/uploadPhoto-action";
 
 export async function getTrainer(userId: number) {
   return await prisma.trainer.findFirst({
@@ -65,6 +67,11 @@ export default async function Page() {
                   {user.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
+              <UploadPhotoForm
+                id={user.id}
+                action={uploadPhotoAction}
+                name={"photo"}
+              />
               <div className="text-center space-y-1">
                 <p className="text-gray-800 font-medium text-lg">{user.name}</p>
                 <p className="text-gray-600 text-sm">{user.email}</p>
