@@ -29,7 +29,7 @@ export default function AdminClients() {
   const skip = (page - 1) * ROWS_PER_PAGE;
   // Fetch payments
   const { data, isLoading } = useQuery<AdminClientsResponse>({
-    queryKey: ["paymentHistory", page, debouncedSearch],
+    queryKey: ["adminClients", page, debouncedSearch],
     queryFn: async () => {
       const params = new URLSearchParams({
         skip: skip.toString(),
