@@ -145,7 +145,7 @@ export default function AdminClients() {
 
                   {/* Actions */}
                   <TableCell className="text-center">
-                    <Link href={`/admin/user/payments/${client.id}`}>
+                    <Link href={`/admin/clients/payments/${client.id}`}>
                       <Badge className="rounded-sm"> Ver pagos</Badge>
                     </Link>
                   </TableCell>
