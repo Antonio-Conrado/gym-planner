@@ -17,12 +17,12 @@ type Props = {
 
 export default async function TrainerReviews({ trainerId }: Props) {
   const reviews = await prisma.trainerReview.findMany({
-    where: { trainerId },
+    where: { trainerId, comment: { not: null } },
     include: {
       trainer: { select: { rating: true } },
       client: { select: { name: true } },
     },
-    orderBy: { id: "asc" },
+    orderBy: { id: "desc" },
     take: 10,
     skip: 0,
   });
@@ -33,32 +33,38 @@ export default async function TrainerReviews({ trainerId }: Props) {
         <CardTitle>Reseña de clientes</CardTitle>
       </CardHeader>
       <CardContent>
-        {reviews.map((review, index) => {
-          const starClasses = getStarClasses(Number(review.rating));
+        {reviews.length > 0 ? (
+          reviews.map((review, index) => {
+            const starClasses = getStarClasses(Number(review.rating));
 
-          return (
-            <div key={review.id} className="mb-4">
-              <div className="flex justify-between">
-                <h3>{review.client.name}</h3>
-                <p className="text-gray-500">
-                  {formatDate(review.createdAt.toString())}
+            return (
+              <div key={review.id} className="mb-4">
+                <div className="flex justify-between">
+                  <h3>{review.client.name}</h3>
+                  <p className="text-gray-500">
+                    {formatDate(review.createdAt.toString())}
+                  </p>
+                </div>
+
+                <div className="flex mt-1">
+                  {starClasses.map((cls: string, i: number) => (
+                    <Star key={i} className={`${cls} h-4`} />
+                  ))}
+                </div>
+
+                <p className="mt-1 text-gray-700 text-sm italic">
+                  {`"${review.comment ?? "No hay reseña"}"`}
                 </p>
+
+                {index !== reviews.length - 1 && <Separator className="my-2" />}
               </div>
-
-              <div className="flex mt-1">
-                {starClasses.map((cls: string, i: number) => (
-                  <Star key={i} className={`${cls} h-4`} />
-                ))}
-              </div>
-
-              <p className="mt-1 text-gray-700 text-sm italic">
-                {`"${review.comment ?? "No hay reseña"}"`}
-              </p>
-
-              {index !== reviews.length - 1 && <Separator className="my-2" />}
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <p className="text-gray-700 text-center italic">
+            No hay reseñas disponibles por el momento.
+          </p>
+        )}
       </CardContent>
     </Card>
   );
