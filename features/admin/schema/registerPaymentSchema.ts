@@ -17,9 +17,9 @@ export const registerPaymentSchema = z
   })
   .superRefine((data, ctx) => {
     if (
-      data.method === PaymentMethod.CARD ||
-      (data.method === PaymentMethod.TRANSFER &&
-        (!data.reference || data.reference.trim() === ""))
+      (data.method === PaymentMethod.CARD ||
+        data.method === PaymentMethod.TRANSFER) &&
+      (!data.reference || data.reference.trim() === "")
     ) {
       ctx.addIssue({
         code: "custom",

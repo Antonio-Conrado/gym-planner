@@ -107,12 +107,13 @@ export default function RegisterPaymentForm({ paymentConcepts }: Props) {
             <div className="grid gap-3">
               <Label htmlFor="method">Método de pago</Label>
               <Select
-                name="method"
                 value={selectedMethod || ""}
                 onValueChange={(value) =>
                   setSelectedMethod(value as PaymentMethod)
                 }
               >
+                <input type="hidden" name="method" value={selectedMethod} />
+
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecciona un método de pago" />
                 </SelectTrigger>
@@ -186,7 +187,7 @@ export default function RegisterPaymentForm({ paymentConcepts }: Props) {
             <div className="grid gap-3">
               <Label>Monto Ingresado</Label>
               <Input
-                defaultValue={0}
+                value={paidAmount}
                 onChange={(e) => setPaidAmount(+e.target.value)}
                 type="number"
               />
