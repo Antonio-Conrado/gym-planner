@@ -48,7 +48,7 @@ export default function UploadPhotoForm({
   useEffect(() => {
     if (state) {
       if (state.status === status.COMPLETED) toast.success(state.message);
-      else toast.error(state.message);
+      if (state.status === status.ERROR) toast.error(state.message);
     }
   }, [state]);
 
