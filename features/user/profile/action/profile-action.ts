@@ -29,7 +29,7 @@ export async function profileAction(
         email: errors.properties?.email?.errors,
         telephone: errors.properties?.telephone?.errors,
       },
-      status: status.ERROR,
+      status: status.PENDING,
     };
   }
 

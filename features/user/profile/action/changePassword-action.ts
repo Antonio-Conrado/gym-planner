@@ -34,7 +34,7 @@ export async function changePasswordAction(
         password: errors.properties?.password?.errors,
         confirmPassword: errors.properties?.confirmPassword?.errors,
       },
-      status: status.ERROR,
+      status: status.PENDING,
     };
   }
 

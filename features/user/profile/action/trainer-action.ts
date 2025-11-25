@@ -28,7 +28,7 @@ export async function trainerAction(
         biography: errors.properties?.biography?.errors,
         specialityId: errors.properties?.specialityId?.errors,
       },
-      status: status.ERROR,
+      status: status.PENDING,
     };
   }
 
