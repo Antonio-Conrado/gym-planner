@@ -90,7 +90,6 @@ export default function ClientProgressHistory({
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-gray-600">
                     {formatDate(record.recordedAt.toString())}
-                    <span>{record.notes ?? "--"}</span>
                   </p>
                   <Badge variant="outline">{record.weight} kg</Badge>
                 </div>
