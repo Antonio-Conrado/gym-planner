@@ -11,6 +11,8 @@ import { Prisma } from "@/app/generated/prisma";
 import { getStarClasses } from "@/lib/helpers/getStarClasses";
 import { auth } from "@/lib/auth";
 import RequestTraining from "./RequestTraining";
+import TrainerQuickRating from "./TrainerQuickRating";
+import TrainerFeedbackForm from "./TrainerFeedbackForm";
 
 type TrainerWithDetails = Prisma.UserGetPayload<{
   include: {
@@ -65,20 +67,26 @@ export default async function TrainerInformation({ user }: Props) {
             </span>
 
             {/* speciality */}
-            <span className="bg-orange-600 text-white px-2 py-0.5 rounded-md text-sm mx-auto">
+            <span className="bg-gray-600 text-white px-2 py-0.5 rounded-md text-sm mx-auto">
               {user.Trainer.speciality.name}
             </span>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <RequestTraining
           client={client}
           schedules={user.Trainer.schedules}
           trainerId={user.Trainer.id}
           trainerName={user.name}
         />
+
+        {/* Rating buttons */}
+        <div className="flex flex-col lg:flex-row items-center gap-2 mt-5">
+          <TrainerQuickRating trainerId={user.Trainer.id} slug={user.slug} />
+          <TrainerFeedbackForm trainerId={user.Trainer.id} slug={user.slug} />
+        </div>
       </CardFooter>
     </Card>
   );
