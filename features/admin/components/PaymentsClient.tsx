@@ -45,7 +45,7 @@ export default function PaymentsClient({ id }: { id: number }) {
         <CardDescription>
           Total pagado:{" "}
           <span className="font-semibold text-orange-600">
-            C${data?.totalPaid.toFixed(0) ?? 0}
+            C${data?.totalPaid ? data.totalPaid.toFixed(0) : 0}
           </span>
         </CardDescription>
       </CardHeader>
@@ -56,7 +56,7 @@ export default function PaymentsClient({ id }: { id: number }) {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {data && data.payments.length > 0 ? (
+            {data?.payments && data.payments.length > 0 ? (
               <>
                 {data.payments.map((payment) => (
                   <div key={payment.id}>
@@ -66,14 +66,14 @@ export default function PaymentsClient({ id }: { id: number }) {
               </>
             ) : (
               <p className="text-center text-gray-600">
-                No se encontraron resultados
+                No hay pagos registrados.
               </p>
             )}
           </div>
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        {data && (
+        {data?.payments && (
           <Pagination
             total={data.totalPayments}
             page={page}
