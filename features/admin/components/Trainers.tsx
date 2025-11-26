@@ -95,7 +95,7 @@ export default function Trainers({ trainers }: Props) {
                         isActive={trainer.status}
                       />
 
-                      <Link href={`/admin/trainers/${trainer.user.slug}`}>
+                      <Link href={`/admin/trainers/${trainer.id}`}>
                         <Info className="text-cyan-700" />
                       </Link>
                     </TableCell>
