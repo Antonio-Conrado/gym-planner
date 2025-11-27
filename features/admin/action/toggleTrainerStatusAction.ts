@@ -8,8 +8,14 @@ export async function toggleTrainerStatusAction(
   id: number,
   currentStatus: boolean
 ) {
-  console.log(currentStatus);
   try {
+    const trainer = await prisma.trainer.findUnique({
+      where: { id },
+      select: { userId: true },
+    });
+
+    if (!trainer || !trainer.userId) throw new Error("El entrenador no existe");
+
     await prisma.trainer.update({
       where: { id },
       data: {
@@ -17,6 +23,24 @@ export async function toggleTrainerStatusAction(
         deletedAt: !currentStatus ? null : new Date(),
       },
     });
+
+    await prisma.$transaction([
+      prisma.trainer.update({
+        where: { id },
+        data: {
+          status: !currentStatus,
+          deletedAt: !currentStatus ? new Date() : null,
+        },
+      }),
+
+      prisma.user.update({
+        where: { id: trainer.userId },
+        data: {
+          status: !currentStatus,
+          deletedAt: !currentStatus ? new Date() : null,
+        },
+      }),
+    ]);
 
     revalidatePath("/admin/catalogs");
 
