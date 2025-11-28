@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Badge } from "@/shared/components/ui/badge";
 import { Clock, Mail, Phone } from "lucide-react";
 import { format } from "date-fns";
-import { DAYS_OF_WEEK } from "@/lib/enum";
+import { DAYS_OF_WEEK, WEEK_DAYS } from "@/lib/enum";
 import { Separator } from "@/shared/components/ui/separator";
 
 type Props = {
@@ -97,17 +97,27 @@ export default function TrainerInfoCard({ trainer }: Props) {
             </span>
           </div>
           <div className="grid grid-col-1 md:grid-cols-2 gap-3 mt-2">
-            {trainer.schedules.map((item, index) => (
-              <Badge
-                key={index}
-                className="flex justify-between items-center p-3"
-                variant={"secondary"}
-              >
-                <span>{DAYS_OF_WEEK[item.dayOfWeek]}: </span>
-                {format(item.startTime.toString(), "HH:mm a")} -{" "}
-                {format(item.endTime.toString(), "HH:mm a")}
-              </Badge>
-            ))}
+            {trainer.schedules
+              .sort(
+                (a, b) =>
+                  WEEK_DAYS.indexOf(a.dayOfWeek) -
+                  WEEK_DAYS.indexOf(b.dayOfWeek)
+              )
+              .map(
+                (item, index) =>
+                  item.startTime &&
+                  item.endTime && (
+                    <Badge
+                      key={index}
+                      className="flex justify-between items-center p-3"
+                      variant="secondary"
+                    >
+                      <span>{DAYS_OF_WEEK[item.dayOfWeek]}: </span>
+                      {format(item.startTime.toString(), "HH:mm a")} -{" "}
+                      {format(item.endTime.toString(), "HH:mm a")}
+                    </Badge>
+                  )
+              )}
           </div>
         </div>
       </CardContent>
