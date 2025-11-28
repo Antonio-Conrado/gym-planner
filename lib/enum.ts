@@ -1,3 +1,4 @@
+import { DaysOfWeek } from "@/app/generated/prisma";
 import {
   Calendar,
   DollarSign,
@@ -23,6 +24,16 @@ export enum DAYS_OF_WEEK {
   SATURDAY = "Sábado",
   SUNDAY = "Domingo",
 }
+
+export const WEEK_DAYS: DaysOfWeek[] = [
+  DaysOfWeek.MONDAY,
+  DaysOfWeek.TUESDAY,
+  DaysOfWeek.WEDNESDAY,
+  DaysOfWeek.THURSDAY,
+  DaysOfWeek.FRIDAY,
+  DaysOfWeek.SATURDAY,
+  DaysOfWeek.SUNDAY,
+];
 
 export enum STATUS_LIST {
   PENDING = "Pendiente",
