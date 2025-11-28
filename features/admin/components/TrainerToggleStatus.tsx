@@ -23,7 +23,6 @@ type Props = {
 
 export function TrainerToggleStatus({ id, isActive }: Props) {
   const [open, setOpen] = useState(false);
-  console.log(isActive);
   const handleToggleStatus = async () => {
     const result = await toggleTrainerStatusAction(id, isActive);
     setOpen(false);
