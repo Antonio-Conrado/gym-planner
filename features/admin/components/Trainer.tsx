@@ -77,7 +77,7 @@ export default function Trainer({ trainerId, trainerInformation }: Props) {
           <div className="col-span-2">
             <TrainerInfoCard trainer={trainerInformation} />
           </div>
-          <div className="col-span-2 md:col-span-1 flex flex-col gap-6 md:gap-0 justify-between">
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-6  justify-between">
             <InfoCard
               title={
                 data.totalTrainerClients === 1
