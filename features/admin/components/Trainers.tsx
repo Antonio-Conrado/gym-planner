@@ -18,6 +18,7 @@ import { Speciality, Trainer, User } from "@/app/generated/prisma";
 import { TrainerToggleStatus } from "./TrainerToggleStatus";
 import Link from "next/link";
 import { Info } from "lucide-react";
+import { TrainerScheduleForm } from "./TrainerScheduleForm";
 
 type trainer = Trainer & {
   user: {
@@ -54,7 +55,7 @@ export default function Trainers({ trainers }: Props) {
                 <TableHead>Biografía</TableHead>
                 <TableHead>Especialidad</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead>Acciones</TableHead>
+                <TableHead className="text-center">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             {trainers.length > 0 ? (
@@ -94,7 +95,7 @@ export default function Trainers({ trainers }: Props) {
                         id={trainer.id}
                         isActive={trainer.status}
                       />
-
+                      <TrainerScheduleForm trainerId={trainer.id} />
                       <Link href={`/admin/trainers/${trainer.id}`}>
                         <Info className="text-cyan-700" />
                       </Link>
