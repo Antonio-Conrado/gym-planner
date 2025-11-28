@@ -163,8 +163,8 @@ model Schedule {
   trainerId Int
   trainer   Trainer    @relation(fields: [trainerId], references: [id])
   dayOfWeek DaysOfWeek
-  startTime DateTime
-  endTime   DateTime
+  startTime DateTime?
+  endTime   DateTime?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
 
