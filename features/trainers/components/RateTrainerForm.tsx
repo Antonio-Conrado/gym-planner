@@ -1,5 +1,12 @@
 "use client";
-import { useActionState, useEffect, useEffectEvent, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useEffect,
+  useEffectEvent,
+  useState,
+} from "react";
 import { Button } from "@/shared/components/ui/button";
 import { DialogClose, DialogFooter } from "@/shared/components/ui/dialog";
 import { StarRating } from "@/shared/components/ui/StartRating";
@@ -18,11 +25,13 @@ type Props = {
   trainerId: number;
   slug: string;
   allowComment?: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 export default function RateTrainerForm({
   trainerId,
   allowComment,
   slug,
+  setOpen,
 }: Props) {
   const [stars, setStars] = useState(0);
 
@@ -40,10 +49,11 @@ export default function RateTrainerForm({
       if (state.status === status.COMPLETED) {
         toast.success(state.message);
         resetStars();
+        setOpen(false);
       }
       if (state.status === status.ERROR) toast.error(state.message);
     }
-  }, [state]);
+  }, [state, setOpen]);
 
   return (
     <>

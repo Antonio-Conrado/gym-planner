@@ -9,14 +9,16 @@ import {
   DialogTrigger,
 } from "@/shared/components/ui/dialog";
 import RateTrainerForm from "./RateTrainerForm";
+import { useState } from "react";
 
 type Props = {
   trainerId: number;
   slug: string;
 };
 export default function TrainerQuickRating({ trainerId, slug }: Props) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Calificar con estrellas</Button>
       </DialogTrigger>
@@ -24,10 +26,11 @@ export default function TrainerQuickRating({ trainerId, slug }: Props) {
         <DialogHeader>
           <DialogTitle>Calificar entrenador</DialogTitle>
           <DialogDescription>
-            Otorga una calificación rápida con estrellas al entrenador.
+            Otorga una calificación con estrellas según tu experiencia con el
+            entrenador.
           </DialogDescription>
         </DialogHeader>
-        <RateTrainerForm trainerId={trainerId} slug={slug} />
+        <RateTrainerForm trainerId={trainerId} slug={slug} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
