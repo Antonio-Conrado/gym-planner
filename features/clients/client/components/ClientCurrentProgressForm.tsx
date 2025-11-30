@@ -43,7 +43,7 @@ export function ClientCurrentProgressForm({
   useEffect(() => {
     if (state) {
       if (state.status === status.ERROR) toast.error(state.message);
-      if (state.status === status.COMPLETED) toast.success(state.message);
+      if (state.status === status.SUCCESS) toast.success(state.message);
     }
   }, [state, queryClient, userProgressId]);
 

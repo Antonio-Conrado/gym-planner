@@ -42,7 +42,7 @@ export async function registerClientProgressAction(
         calf: errorTree.properties?.calf?.errors,
         notes: errorTree.properties?.notes?.errors,
       },
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   }
   try {

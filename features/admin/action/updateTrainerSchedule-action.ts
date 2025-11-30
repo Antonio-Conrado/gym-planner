@@ -35,7 +35,7 @@ export async function updateTrainerScheduleAction(schedules: Schedule[]) {
     return {
       message: "Horario actualizado correctamente",
       error: [],
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

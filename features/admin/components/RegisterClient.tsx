@@ -91,7 +91,7 @@ export function RegisterClient() {
 
   useEffect(() => {
     if (state) {
-      if (state.status === status.COMPLETED) {
+      if (state.status === status.SUCCESS) {
         closeDialog();
         toast.success(state.message);
         if (state.data?.generatedPassword && state.data.generatedEmail) {

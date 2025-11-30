@@ -63,7 +63,7 @@ export default function RequestTraining({
     if (reservation.status === status.ERROR) {
       toast.warning(reservation.message);
     }
-    if (reservation.status === status.COMPLETED) {
+    if (reservation.status === status.SUCCESS) {
       setNotifications(); // Mark that there are new notifications so the NotificationsBell component updates its indicator
       toast.success(reservation.message);
     }

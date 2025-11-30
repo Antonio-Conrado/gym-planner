@@ -82,7 +82,7 @@ export function ClientRoutinesForm({
   // Display success or error messages to the user based on the current action state
   useEffect(() => {
     if (state) {
-      if (state.status === status.COMPLETED) {
+      if (state.status === status.SUCCESS) {
         toast.success(state.message);
         reset();
         router.push(`/clients/routines/${state.data}`);

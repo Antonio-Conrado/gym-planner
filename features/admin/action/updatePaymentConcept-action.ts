@@ -45,7 +45,7 @@ export async function updatePaymentConceptAction(
     return {
       message: "El precio del concepto de pago se actualizó correctamente.",
       errors: paymentConceptInitialValues,
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

@@ -23,7 +23,7 @@ export async function fetchRequestTraining(
     return {
       message: "",
       errors: [],
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

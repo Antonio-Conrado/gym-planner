@@ -82,7 +82,7 @@ export async function RateTrainerAction(
     return {
       errors: rateTrainerInitialValue,
       message: "¡Has calificado al entrenador exitosamente!",
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

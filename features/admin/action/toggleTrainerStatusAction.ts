@@ -49,7 +49,7 @@ export async function toggleTrainerStatusAction(
         ? "El entrenador fue desactivado correctamente."
         : "El entrenador fue reactivado correctamente.",
       errors: {},
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

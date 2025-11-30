@@ -46,7 +46,7 @@ export default function RateTrainerForm({
   });
   useEffect(() => {
     if (state) {
-      if (state.status === status.COMPLETED) {
+      if (state.status === status.SUCCESS) {
         toast.success(state.message);
         resetStars();
         setOpen(false);

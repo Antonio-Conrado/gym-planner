@@ -96,7 +96,7 @@ export default async function registerPaymentAction(
     return {
       errors: {},
       message: "Pago registrado correctamente.",
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

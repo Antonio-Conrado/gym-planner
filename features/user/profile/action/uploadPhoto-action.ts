@@ -31,7 +31,7 @@ export async function uploadPhotoAction(
 
     return {
       message: "Imagen subida exitosamente",
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

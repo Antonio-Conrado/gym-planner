@@ -26,7 +26,7 @@ export function TrainerToggleStatus({ id, isActive }: Props) {
   const handleToggleStatus = async () => {
     const result = await toggleTrainerStatusAction(id, isActive);
     setOpen(false);
-    if (result.status === status.COMPLETED) toast.success(result.message);
+    if (result.status === status.SUCCESS) toast.success(result.message);
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

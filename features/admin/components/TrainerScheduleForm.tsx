@@ -44,7 +44,7 @@ export function TrainerScheduleForm({ trainerId }: Props) {
     e.preventDefault();
     const result = await updateTrainerScheduleAction(schedule);
 
-    if (result.status === status.COMPLETED) {
+    if (result.status === status.SUCCESS) {
       queryClient.invalidateQueries({
         queryKey: ["trainer-schedules", { trainerId }],
       });

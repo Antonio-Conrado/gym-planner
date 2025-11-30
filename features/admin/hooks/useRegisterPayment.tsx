@@ -52,7 +52,7 @@ export default function useRegisterPayment() {
   });
 
   useEffect(() => {
-    if (state.status === status.COMPLETED) {
+    if (state.status === status.SUCCESS) {
       toast.success(state.message);
       queryClient.invalidateQueries({ queryKey: ["paymentHistory"] });
       queryClient.invalidateQueries({ queryKey: ["barChartIncome"] });

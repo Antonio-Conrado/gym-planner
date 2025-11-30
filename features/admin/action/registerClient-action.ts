@@ -101,7 +101,7 @@ export async function registerClient(
         generatedEmail: finalUserEmail,
         generatedPassword: tempPassword,
       },
-      status: status.COMPLETED,
+      status: status.SUCCESS,
     };
   } catch (error) {
     return {

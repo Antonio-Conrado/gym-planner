@@ -64,7 +64,7 @@ export function PaymentConceptForm({ defaultValue }: Props) {
   });
   useEffect(() => {
     if (state.status === status.ERROR) toast.error(state.message);
-    if (state.status === status.COMPLETED) {
+    if (state.status === status.SUCCESS) {
       toast.success(state.message);
       closeDialog();
     }
