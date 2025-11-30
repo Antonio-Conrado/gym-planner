@@ -54,7 +54,12 @@ export const registerClientByAdminSchema = z
     }
   });
 
-export type registerClientByAdmin = z.infer<typeof registerClientByAdminSchema>;
+export type registerClientByAdmin = z.infer<
+  typeof registerClientByAdminSchema
+> & {
+  generatedEmail?: string;
+  generatedPassword?: string;
+};
 
 export const registerClientByAdminInitialState = {
   name: [],

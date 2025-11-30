@@ -10,6 +10,7 @@ import { registerClientByAdmin } from "../schema/registerClientByAdminSchema";
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/helpers/slugify";
 import { DaysOfWeek, Role } from "@/app/generated/prisma";
+import bcrypt from "bcryptjs";
 
 export async function registerClient(
   initialState: InitialState<
@@ -43,7 +44,11 @@ export async function registerClient(
 
   try {
     const { name, email, telephone, trainerId } = validateFields.data;
-    await prisma.$transaction(async (prisma) => {
+
+    const tempPassword = Math.random().toString(36).slice(-10);
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    const finalUserEmail = await prisma.$transaction(async (prisma) => {
       const slugTemporary = `${slugify(name)}-${Date.now()}`;
       const newUser = await prisma.user.create({
         data: {
@@ -52,6 +57,9 @@ export async function registerClient(
           email: email ?? `${slugTemporary}@gymPlanner.com`, // temporary email if none is provided
           role: Role.CLIENT,
           telephone,
+          isFirstLogin: true,
+          emailGeneratedByAdmin: email ? false : true,
+          password: email ? null : hashedPassword,
         },
       });
 
@@ -76,11 +84,23 @@ export async function registerClient(
           },
         });
       }
+      return finalEmail;
     });
 
     return {
       errors: registerClientByAdminInitialState,
       message: "Se registró el cliente correctamente",
+      data: {
+        name: "",
+        trainerId: null,
+        email: null,
+        daysOfWeek: null,
+        telephone: null,
+        wantsTrainer: undefined,
+
+        generatedEmail: finalUserEmail,
+        generatedPassword: tempPassword,
+      },
       status: status.COMPLETED,
     };
   } catch (error) {
