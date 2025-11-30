@@ -27,6 +27,28 @@ export const { handlers, auth, signOut } = NextAuth({
           if (!isValidPassword) {
             throw new Error("La contraseña no es válida");
           }
+
+          if (user.isFirstLogin && user.emailGeneratedByAdmin) {
+            return {
+              id: user.id.toString(),
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              isFirstLogin: user.isFirstLogin,
+              emailGeneratedByAdmin: user.emailGeneratedByAdmin,
+            };
+          }
+
+          if (user.passwordGeneratedByAdmin) {
+            return {
+              id: user.id.toString(),
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              passwordGeneratedByAdmin: user.passwordGeneratedByAdmin,
+            };
+          }
+
           return {
             id: user.id.toString(),
             name: user.name,
@@ -54,6 +76,9 @@ export const { handlers, auth, signOut } = NextAuth({
       if (user) {
         token.id = user.id as string;
         token.role = (user as { role: string }).role;
+        token.isFirstLogin = user.isFirstLogin;
+        token.emailGeneratedByAdmin = user.emailGeneratedByAdmin;
+        token.passwordGeneratedByAdmin = user.passwordGeneratedByAdmin;
       }
       return token;
     },
@@ -61,6 +86,9 @@ export const { handlers, auth, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        session.user.isFirstLogin = token.isFirstLogin;
+        session.user.emailGeneratedByAdmin = token.emailGeneratedByAdmin;
+        session.user.passwordGeneratedByAdmin = token.passwordGeneratedByAdmin;
       }
       return session;
     },
