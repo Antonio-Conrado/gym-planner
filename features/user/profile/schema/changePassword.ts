@@ -2,16 +2,19 @@ import * as z from "zod";
 
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().optional().nullable(),
+    currentPassword: z
+      .string({ error: "El campo contraseña actual debe ser válido" })
+      .optional()
+      .nullable(),
     password: z
-      .string()
+      .string({ error: "El campo nueva contraseña debe ser válido" })
       .nonempty({ message: "La nueva contraseña es obligatoria" })
       .regex(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
         "La contraseña debe tener al menos 6 caracteres, una letra, un número y un carácter especial"
       ),
     confirmPassword: z
-      .string()
+      .string({ error: "El campo confirmar contraseña debe ser válido" })
       .nonempty({ message: "Debes confirmar la contraseña" }),
     hasPassword: z.boolean(), //flag indicating if the user has a password
   })
