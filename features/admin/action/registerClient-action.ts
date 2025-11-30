@@ -66,7 +66,7 @@ export async function registerClient(
       // Create final slug using user ID and name for unique
       const slug = `${newUser.id}-${slugify(name)}`;
       const finalEmail =
-        email ?? `${newUser.id}-${slugify(name)}@gymPlanner.com`;
+        email ?? `${slugify(name)}-${newUser.id}@gymPlanner.com`;
 
       await prisma.user.update({
         where: { id: newUser.id },
