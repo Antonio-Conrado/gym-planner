@@ -1,10 +1,14 @@
 export enum status {
-  SUCCESS = "SUCCESS",
-  COMPLETED = "COMPLETED",
-  WARNING = "WARNING",
-  PENDING = "PENDING",
-  CANCELED = "CANCELED",
-  ERROR = "ERROR",
+  PENDING = "PENDING", // pending confirmation
+  CONFIRMED = "CONFIRMED", // confirmed by the trainer
+  CANCELED = "CANCELED", // cancelled by the trainer or gym/admin
+  MISSED = "MISSED", // client did not attend
+  COMPLETED = "COMPLETED", // session completed successfully
+  RESCHEDULED = "RESCHEDULED", // session rescheduled
+  SUCCESS = "SUCCESS", // operation was successful
+  WARNING = "WARNING", // operation completed with warning
+  ERROR = "ERROR", // operation failed
+  SCHEMAERROR = "SCHEMAERROR", // schema validation failed
 }
 
 export interface InitialState<T, D = undefined> {
