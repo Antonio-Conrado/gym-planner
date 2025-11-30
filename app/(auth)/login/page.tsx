@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { InputForm } from "@/shared/components/forms";
 import { toast } from "sonner";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signIn, type SignInResponse } from "next-auth/react";
 
 export default function Page() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function Page() {
 
   const onSubmit = async (data: login) => {
     // Sign in using NextAuth with Credentials
-    const res = await signIn("credentials", {
+    const res: SignInResponse | undefined = await signIn("credentials", {
       redirect: false, // important to handle errors on the frontend
       email: data.email,
       password: data.password,
@@ -46,7 +46,6 @@ export default function Page() {
       router.push("/profile");
     }
   };
-
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -72,7 +71,7 @@ export default function Page() {
               <div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
                 <Link
-                  href="#"
+                  href="/reset-password"
                   className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
