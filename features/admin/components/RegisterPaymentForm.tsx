@@ -162,6 +162,11 @@ export default function RegisterPaymentForm({ paymentConcepts }: Props) {
                   />
                 </PopoverContent>
               </Popover>
+              <input
+                type="hidden"
+                name="startDate"
+                value={startDate ? startDate.toISOString() : ""}
+              />
             </div>
 
             {/* end date */}
