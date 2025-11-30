@@ -35,6 +35,9 @@ enum StatusList {
   MISSED // client did not attend
   COMPLETED // session completed successfully
   RESCHEDULED // session rescheduled
+  SUCCESS // operation was successful
+  WARNING // operation completed with warning
+  ERROR // operation failed
 }
 
 enum Concept {
@@ -90,15 +93,21 @@ model Speciality {
 // =======================
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   name      String
-  slug      String    @unique
-  email     String    @unique
+  slug      String  @unique
+  email     String  @unique
   googleId  String?
   telephone String?
   password  String?
   photo     String?
-  role      Role      @default(CLIENT)
+  role      Role    @default(CLIENT)
+
+  isFirstLogin             Boolean @default(false)
+  passwordGeneratedByAdmin Boolean @default(false)
+  emailGeneratedByAdmin    Boolean @default(false)
+  tokenResetPassword       String? @unique
+
   status    Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -111,6 +120,11 @@ model User {
   Trainer           Trainer? // Optional relation: if the user is a trainer, they have a single detailed trainer profile
   Notification      Notification[]
   ClientTrainerPlan ClientTrainerPlan[]
+
+  @@index([name])
+  @@index([isFirstLogin, emailGeneratedByAdmin])
+  @@index([passwordGeneratedByAdmin])
+  @@index([tokenResetPassword])
 }
 
 // =======================
