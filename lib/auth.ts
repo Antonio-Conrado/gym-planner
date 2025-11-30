@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { slugify } from "./helpers/slugify";
 
 export const { handlers, auth, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       // Authenticate using only email and password
