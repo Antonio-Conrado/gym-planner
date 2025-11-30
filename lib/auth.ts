@@ -1,10 +1,12 @@
-import NextAuth from "next-auth";
+import NextAuth, { Profile, User, type Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "./prisma";
 import Credentials from "next-auth/providers/credentials";
 import { loginSchema } from "@/features/auth/schemas/login";
 import bcrypt from "bcryptjs";
 import { slugify } from "./helpers/slugify";
+import type { JWT } from "next-auth/jwt";
+import { profile } from "../features/user/profile/schema/profile";
 
 export const { handlers, auth, signOut } = NextAuth({
   trustHost: true,
@@ -73,7 +75,7 @@ export const { handlers, auth, signOut } = NextAuth({
   session: { strategy: "jwt" },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id as string;
         token.role = (user as { role: string }).role;
@@ -83,7 +85,7 @@ export const { handlers, auth, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
@@ -93,7 +95,7 @@ export const { handlers, auth, signOut } = NextAuth({
       }
       return session;
     },
-    async signIn({ user, profile }) {
+    async signIn({ user, profile }: { user: User; profile: Profile }) {
       const email = user?.email;
       const googleId = profile?.sub;
 
