@@ -95,7 +95,7 @@ export const { handlers, auth, signOut } = NextAuth({
       }
       return session;
     },
-    async signIn({ user, profile }: { user: User; profile: Profile }) {
+    async signIn({ user, profile }: { user?: User; profile?: Profile }) {
       const email = user?.email;
       const googleId = profile?.sub;
 
