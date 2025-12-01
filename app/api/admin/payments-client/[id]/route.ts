@@ -19,8 +19,8 @@ export async function GET(
     );
   }
 
-  // Check if the user has the ADMIN role
-  if (session.user.role !== Role.ADMIN) {
+  // Check if the user has the ADMIN role and CLIENT role
+  if (session.user.role !== Role.ADMIN && session.user.role !== Role.CLIENT) {
     return NextResponse.json(
       {
         error: "prohibido",
