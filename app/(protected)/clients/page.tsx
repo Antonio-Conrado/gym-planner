@@ -9,10 +9,12 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
+import prisma from "@/lib/prisma";
+import ErrorAlert from "@/shared/components/alert/ErrorAlert";
 
 export default async function Page() {
-  const trainer = await auth();
-  if (!trainer || trainer.user.role !== Role.TRAINER) {
+  const session = await auth();
+  if (!session || session.user.role !== Role.TRAINER) {
     return (
       <div className="min-h-screen flex justify-center items-center p-6">
         <Alert className="max-w-md w-full flex flex-col items-center">
@@ -35,8 +37,23 @@ export default async function Page() {
     );
   }
 
+  const trainer = await prisma.trainer.findUnique({
+    where: {
+      userId: +session.user.id,
+    },
+  });
+
+  if (!trainer) {
+    return (
+      <ErrorAlert
+        title="Acceso denegado"
+        description="Lo sentimos, no se encontró un entrenador asociado a tu cuenta. Por favor, contacta al administrador."
+      />
+    );
+  }
+
   const { totalClients, activeClients, totalRoutines } =
-    await fetchTrainerDashboardData(Number(trainer.user.id));
+    await fetchTrainerDashboardData(Number(trainer.id));
 
   return (
     <div className="min-h-screen  p-6 ">
@@ -55,10 +72,7 @@ export default async function Page() {
         totalRoutines={totalRoutines}
       />
 
-      <ClientList
-        trainerId={Number(trainer.user.id)}
-        totalClients={totalClients}
-      />
+      <ClientList trainerId={Number(trainer.id)} totalClients={totalClients} />
     </div>
   );
 }
