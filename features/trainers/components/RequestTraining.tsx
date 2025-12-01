@@ -69,8 +69,7 @@ export default function RequestTraining({
     }
   };
 
-  const isTrainer = client?.user?.role === Role.TRAINER;
-  const showButton = !client || !isTrainer;
+  const showButton = client?.user?.role === Role.CLIENT || !client;
 
   return (
     <>
