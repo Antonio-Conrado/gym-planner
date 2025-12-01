@@ -5,6 +5,7 @@ import ClientProgressHistory from "@/features/clients/client/components/ClientPr
 import ClientProgressPhotos from "@/features/clients/client/components/ClientProgressPhotos";
 import ClientRoutines from "@/features/clients/client/components/ClientRoutines";
 import ClientRoutinesHistory from "@/features/clients/client/components/ClientRoutinesHistory";
+import { auth } from "@/lib/auth";
 
 import prisma from "@/lib/prisma";
 import ErrorAlert from "@/shared/components/alert/ErrorAlert";
@@ -29,6 +30,8 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const { id } = await params;
+  const session = await auth();
+  if (!session) return null;
 
   const client = await prisma.user.findUnique({
     where: { id: Number(id), role: Role.CLIENT },
@@ -115,8 +118,8 @@ export default async function Page({ params }: Props) {
         email={client.email}
         telephone={client.telephone}
         createdAt={client.createdAt}
-        totalSessions={3}
-        lastSession={client.createdAt}
+        totalSessions={clientRoutinesHistory.length}
+        totalProgress={clientProgressHistory.length}
         trainingDays={trainingDays}
       />
 
@@ -151,7 +154,7 @@ export default async function Page({ params }: Props) {
           </div>
         </TabsContent>
         <TabsContent value="routines">
-          {client.role === Role.TRAINER && (
+          {session.user.role === Role.TRAINER && (
             <ClientRoutines
               userProgressId={client.progress?.id ?? null}
               clientName={client.name}

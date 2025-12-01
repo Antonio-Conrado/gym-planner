@@ -18,7 +18,7 @@ type Props = {
   telephone: string | null;
   createdAt: Date;
   totalSessions: number;
-  lastSession: Date;
+  totalProgress: number;
   trainingDays: DaysOfWeek[];
 };
 
@@ -29,7 +29,7 @@ export default function ClientInfoCard({
   telephone,
   createdAt,
   totalSessions,
-  lastSession,
+  totalProgress,
   trainingDays,
 }: Props) {
   return (
@@ -74,15 +74,15 @@ export default function ClientInfoCard({
 
       <CardContent className="grid grid-cols-3 gap-4">
         <div className="bg-gray-100 rounded-md p-3 flex flex-col gap-3">
-          <p className="text-gray-700 text-sm">Total de sesiones realizadas</p>
+          <p className="text-gray-700 text-sm">
+            Total de entrenamientos asignados
+          </p>
           <p className="text-lg">{totalSessions}</p>
         </div>
 
         <div className="bg-gray-100 rounded-md p-3 flex flex-col gap-3">
-          <p className="text-gray-700 text-sm">Ultima sesión realizada</p>
-          <p className="text-sm">
-            {formatDateToDDMMYYYY(lastSession.toString())}
-          </p>
+          <p className="text-gray-700 text-sm">Total progresos registrados</p>
+          <p className="text-sm">{totalProgress}</p>
         </div>
 
         <div className="bg-gray-100 rounded-md p-3 flex flex-col gap-3">
