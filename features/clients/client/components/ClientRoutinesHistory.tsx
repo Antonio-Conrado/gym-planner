@@ -78,8 +78,8 @@ export default function ClientRoutinesHistory({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Historial de medidas</CardTitle>
-        <CardDescription>Últimos registros de progreso</CardDescription>
+        <CardTitle>Historial de rutinas</CardTitle>
+        <CardDescription>Últimos registros de rutinas</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {isLoading ? (
