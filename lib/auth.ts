@@ -75,13 +75,19 @@ export const { handlers, auth, signOut } = NextAuth({
 
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
-      if (user) {
-        token.id = user.id as string;
-        token.role = (user as { role: string }).role;
-        token.isFirstLogin = user.isFirstLogin;
-        token.emailGeneratedByAdmin = user.emailGeneratedByAdmin;
-        token.passwordGeneratedByAdmin = user.passwordGeneratedByAdmin;
+      if (user && user.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+        if (dbUser) {
+          token.id = dbUser.id.toString();
+          token.role = dbUser.role;
+          token.isFirstLogin = dbUser.isFirstLogin;
+          token.emailGeneratedByAdmin = dbUser.emailGeneratedByAdmin;
+          token.passwordGeneratedByAdmin = dbUser.passwordGeneratedByAdmin;
+        }
       }
+
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
