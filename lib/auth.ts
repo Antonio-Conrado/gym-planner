@@ -6,7 +6,6 @@ import { loginSchema } from "@/features/auth/schemas/login";
 import bcrypt from "bcryptjs";
 import { slugify } from "./helpers/slugify";
 import type { JWT } from "next-auth/jwt";
-import { profile } from "../features/user/profile/schema/profile";
 
 export const { handlers, auth, signOut } = NextAuth({
   trustHost: true,
