@@ -54,7 +54,6 @@ export function TrainerScheduleForm({ trainerId }: Props) {
     if (result.status === status.ERROR) toast.error(result.message);
   };
 
-  console.log(scheduleErrors);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

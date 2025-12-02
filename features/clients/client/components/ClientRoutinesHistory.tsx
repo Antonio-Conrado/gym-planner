@@ -61,8 +61,6 @@ export default function ClientRoutinesHistory({
 
   const clientRoutineHistory: Routine[] | [] = data.clientRoutineHistory ?? [];
 
-  console.log(initialDataClientRoutinesHistory);
-
   if (clientRoutineHistory.length === 0) {
     return (
       <Card>

@@ -30,7 +30,6 @@ export default function PaymentsClient({ id }: { id: number }) {
 
       const res = await fetch(`/api/admin/payments-client/${id}/?${params}`);
       const result = await res.json();
-      console.log(result);
       return result;
     },
     enabled: !!page,

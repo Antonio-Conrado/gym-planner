@@ -48,7 +48,6 @@ export default function ResetPasswordForm({ userId, token }: Props) {
         toast.success(state.message);
         router.push("/login");
       }
-      console.log(state);
     }
   }, [state, router, token]);
 
