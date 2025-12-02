@@ -1,8 +1,10 @@
-import { Concept } from "@/app/generated/prisma";
+import { Concept, Role } from "@/app/generated/prisma";
+import Checkout from "@/features/stripe/components/Checkout";
+import { auth } from "@/lib/auth";
 import { CONCEPT } from "@/lib/enum";
 import prisma from "@/lib/prisma";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
+
 import {
   CardContent,
   Card,
@@ -13,6 +15,7 @@ import {
 import { CheckCircle2 } from "lucide-react";
 
 export default async function Plans() {
+  const session = await auth();
   const plans = await prisma.paymentConcept.findMany({
     orderBy: { id: "asc" },
   });
@@ -77,18 +80,9 @@ export default async function Plans() {
                       </div>
                     ))}
                   </div>
-
-                  <Button
-                    className={`w-full mt-6 ${
-                      plan.concept === Concept.MONTH ||
-                      plan.concept === Concept.QUARTER
-                        ? "bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-                        : "bg-gray-900 hover:bg-gray-800"
-                    }`}
-                    size="lg"
-                  >
-                    Comenzar ahora
-                  </Button>
+                  {(!session || session.user.role === Role.CLIENT) && (
+                    <Checkout plan={plan} />
+                  )}
                 </CardContent>
               </Card>
             ))}
