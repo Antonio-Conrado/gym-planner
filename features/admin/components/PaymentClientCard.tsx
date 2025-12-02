@@ -31,7 +31,7 @@ export default function PaymentClientCard({ payment }: Props) {
         <div className="flex justify-between py-1">
           <span className="text-gray-700 font-medium">Monto</span>
           <span className="text-orange-500 font-semibold">
-            C$ {payment.price}
+            C$ {Math.round(payment.price)}
           </span>
         </div>
         <Separator className="my-2" />
@@ -45,7 +45,9 @@ export default function PaymentClientCard({ payment }: Props) {
             </span>
           </div>
           {payment.reference && (
-            <p className="text-gray-600">Referencia: {payment.reference}</p>
+            <p className="text-gray-600 wrap-break-word">
+              Referencia: {payment.reference}
+            </p>
           )}
           {/* paidAt */}
           <p className="text-gray-600">
