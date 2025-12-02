@@ -1,7 +1,8 @@
 import { Concept } from "@/app/generated/prisma";
+import { startOfDay } from "date-fns";
 
 export function calculateEndDate(startDate: Date, concept: Concept): Date {
-  const end = new Date(startDate);
+  const end = startOfDay(startDate);
 
   switch (concept) {
     case Concept.DAY:
@@ -28,5 +29,5 @@ export function calculateEndDate(startDate: Date, concept: Concept): Date {
     case Concept.OTHER:
       break;
   }
-  return end;
+  return startOfDay(end);
 }
