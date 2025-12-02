@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Gym Planner",
   description:
     "Sistema de gimnasio que permite gestionar clientes, entrenadores, horarios, pagos y progreso físico desde un solo lugar.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default async function RootLayout({
