@@ -139,7 +139,9 @@ export function Nav({ session: sessionProp }: Props) {
               </Link>
             ) : (
               <div className="flex items-center gap-4">
-                <NotificationsBell userId={Number(session.user.id)} />
+                {session.user.role !== Role.ADMIN && (
+                  <NotificationsBell userId={Number(session.user.id)} />
+                )}
                 <UserAvatar session={session} isMobile={false} />
               </div>
             )}
@@ -149,7 +151,11 @@ export function Nav({ session: sessionProp }: Props) {
           <div className="md:hidden">
             <div className="flex items-center gap-4">
               {session && (
-                <NotificationsBell userId={Number(session.user.id)} />
+                <>
+                  {session.user.role !== Role.ADMIN && (
+                    <NotificationsBell userId={Number(session.user.id)} />
+                  )}
+                </>
               )}
               <Button
                 variant="ghost"
