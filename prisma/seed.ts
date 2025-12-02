@@ -650,7 +650,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        userId: trainer1.id,
+        userId: trainerUser1.id,
         type: "TRAINING_REQUEST",
         message: `El cliente ${clientWithTrainer.name} seleccionó días de entrenamiento: Lunes, Martes, Miércoles, Jueves`,
         read: false,
