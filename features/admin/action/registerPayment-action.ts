@@ -14,6 +14,7 @@ import {
 } from "@/app/generated/prisma";
 import prisma from "@/lib/prisma";
 import { calculateEndDate } from "@/lib/helpers/calculateEndDate";
+import { startOfDay } from "date-fns";
 
 export default async function registerPaymentAction(
   paymentConcept: string | undefined,
@@ -80,7 +81,7 @@ export default async function registerPaymentAction(
           method,
           reference,
           paidAt: new Date(),
-          startDate: validateFields.data.startDate,
+          startDate: startOfDay(validateFields.data.startDate),
           endDate,
         },
       }),
