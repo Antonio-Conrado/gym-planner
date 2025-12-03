@@ -218,7 +218,7 @@ To enable Cloudinary functionality, sign in to your Cloudinary account and add t
 7. To run the standard development server:
 
 ```
-     npm run dev
+     pnpm run dev
 ```
 
 ## 📜 Scripts
