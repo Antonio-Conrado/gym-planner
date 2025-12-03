@@ -8,7 +8,13 @@ import {
 } from "@/shared/components/ui/card";
 
 export default async function Page() {
-  const paymentConcepts = await prisma.paymentConcept.findMany();
+  const paymentConcepts = await prisma.paymentConcept.findMany({
+    where: {
+      amount: {
+        gt: 0,
+      },
+    },
+  });
 
   return (
     <div className="py-6 px-6 min-h-[80vh]">
