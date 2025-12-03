@@ -17,7 +17,7 @@ This is a personal project created for learning and practice purposes.
 
 ## Live Demo
 
-https://gym-planner.vercel.app
+https://gym-planner-one.vercel.app/
 
 ## Test Users
 
