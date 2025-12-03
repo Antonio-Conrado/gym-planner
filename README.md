@@ -9,6 +9,12 @@ Training requests are only for in-house gym trainers. Clients can request traini
 
 ---
 
+## About this project
+
+This is a personal project created for learning and practice purposes.
+
+---
+
 ## Live Demo
 
 https://gym-planner.vercel.app
