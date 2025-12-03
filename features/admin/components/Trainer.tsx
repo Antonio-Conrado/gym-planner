@@ -113,7 +113,7 @@ export default function Trainer({ trainerId, trainerInformation }: Props) {
         </div>
 
         <div className="shadow-xl rounded-xl py-10 px-6 flex flex-col gap-6 mt-8 border border-gray-200">
-          <h2 className="text-xl font-semibold">Listado de pagos</h2>
+          <h2 className="text-xl font-semibold">Listado de clientes</h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <Input
