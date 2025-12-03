@@ -18,6 +18,7 @@ import NotificationsBell from "@/features/notifications/components/Notifications
 import { navGroups, clientLinks, generalLinks } from "@/shared/data/navLinks";
 import { Role } from "@/app/generated/prisma";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 type Props = {
   session: Session | null;
@@ -31,11 +32,14 @@ export function Nav({ session: sessionProp }: Props) {
   const [session, setSession] = useState(sessionProp);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const pathname = usePathname();
   // Update local session whenever client session changes (login/logout)
   useEffect(() => {
     setSession(updatedSession);
   }, [updatedSession]);
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   // Append role-specific dynamic links to the group, generating URLs with the user's ID
   const navGroupsWithDynamic = navGroups.map((group) => {
@@ -178,7 +182,7 @@ export function Nav({ session: sessionProp }: Props) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed w-full border-t border-gray-200 bg-white shadow-2xl z-50">
+        <div className="md:hidden fixed top-16 bottom-0 w-full border-t border-gray-200 bg-white shadow-2xl z-50 overflow-auto">
           <div className="px-4 py-3 space-y-2">
             {navGroupsWithDynamic.map((group) => {
               if (group.title === "Administrativo" && !session) return null;
