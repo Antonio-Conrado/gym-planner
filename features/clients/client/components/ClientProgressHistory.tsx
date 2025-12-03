@@ -160,7 +160,7 @@ export default function ClientProgressHistory({
           </>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-end">
+      <CardFooter className="flex flex-col justify-center items-center">
         <Pagination
           total={totalClientProgressHistory}
           page={page}

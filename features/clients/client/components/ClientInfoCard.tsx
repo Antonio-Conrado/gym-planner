@@ -72,7 +72,7 @@ export default function ClientInfoCard({
         </div>
       </CardHeader>
 
-      <CardContent className="grid grid-cols-3 gap-4">
+      <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gray-100 rounded-md p-3 flex flex-col gap-3">
           <p className="text-gray-700 text-sm">
             Total de entrenamientos asignados

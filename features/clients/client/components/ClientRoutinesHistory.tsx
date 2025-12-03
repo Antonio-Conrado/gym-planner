@@ -128,7 +128,7 @@ export default function ClientRoutinesHistory({
           </>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-end">
+      <CardFooter className="flex flex-col justify-center items-center">
         <Pagination
           total={totalClientRoutinesHistory}
           page={page}
