@@ -16,7 +16,11 @@ export default async function proxy(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
 
   // Get the JWT token from the session cookie
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
+  });
 
   // Flatten all protected routes to check if current path is protected
   const allProtectedRoutes = Object.values(protectedRoutes).flat();
