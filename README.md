@@ -19,6 +19,14 @@ This is a personal project created for learning and practice purposes.
 
 https://gym-planner.vercel.app
 
+## Test Users
+
+| Email                 | Role    | Password |
+| --------------------- | ------- | -------- |
+| admin@gymplanner.com  | Admin   | Abc123\* |
+| carlos@gymplanner.com | Trainer | Abc123\* |
+| luis@gymplanner.com   | Client  | Abc123\* |
+
 ---
 
 🛠 **Key Technologies**
