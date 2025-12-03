@@ -37,9 +37,6 @@ export function Nav({ session: sessionProp }: Props) {
   useEffect(() => {
     setSession(updatedSession);
   }, [updatedSession]);
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   // Append role-specific dynamic links to the group, generating URLs with the user's ID
   const navGroupsWithDynamic = navGroups.map((group) => {
@@ -207,6 +204,12 @@ export function Nav({ session: sessionProp }: Props) {
                         <Button
                           variant="ghost"
                           className="w-full justify-start hover:bg-gray-100 hover:text-gray-800"
+                          onClick={() => {
+                            const targetPath = link.href;
+                            if (targetPath !== pathname) {
+                              setMobileMenuOpen(false);
+                            }
+                          }}
                         >
                           {link.name}
                         </Button>
@@ -222,7 +225,11 @@ export function Nav({ session: sessionProp }: Props) {
                 <Button className="w-full mt-2">Iniciar sesión</Button>
               </Link>
             ) : (
-              <UserAvatar session={session} isMobile={true} />
+              <UserAvatar
+                session={session}
+                isMobile={true}
+                setMobileMenuOpen={setMobileMenuOpen}
+              />
             )}
           </div>
         </div>

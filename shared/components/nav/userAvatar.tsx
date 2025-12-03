@@ -17,13 +17,19 @@ import {
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import Link from "next/link";
+import { Dispatch, SetStateAction } from "react";
 
 interface UserAvatarProps {
   session: Session | null;
   isMobile: boolean;
+  setMobileMenuOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function UserAvatar({ session, isMobile }: UserAvatarProps) {
+export default function UserAvatar({
+  session,
+  isMobile,
+  setMobileMenuOpen,
+}: UserAvatarProps) {
   if (!session?.user) return null;
 
   const { name, email, image } = session.user;
@@ -43,7 +49,14 @@ export default function UserAvatar({ session, isMobile }: UserAvatarProps) {
           </div>
         </div>
         <Button variant="ghost" className="w-full justify-start">
-          <Link href={"/profile"}>Mi Perfil</Link>
+          <Link
+            href={"/profile"}
+            onClick={() => {
+              setMobileMenuOpen!(false);
+            }}
+          >
+            Mi Perfil
+          </Link>
         </Button>
         <Button
           variant="ghost"
